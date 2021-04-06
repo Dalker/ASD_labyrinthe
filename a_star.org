@@ -10,12 +10,14 @@
 
 * caractéristiques
   - but: recherche de chemin dans un *graphe* entre deux *noeuds* donnés
+    [NB: on n'a *pas* 
   - la première solution sera une des meilleures (mais pas forcément /la/ meilleure)
-    -> utile en pratique (rapidité de calcul)
+    -> utile en pratique (rapidité de calcul) 
+    [en fait on trouve bien la solution optimale si on fait un peu attention à l'heuristique]
   - autres avantages: simplicité, pas de prétraitement (pas d'"omniscience" initiale)
   - inconvénient: peut nécessiter beaucoup d'espace (mémoire) vu que tous les
-    noeuds sont gardés (d'autres approches réduisent la mémoire avec une
-    pré-construction du graphe complet)
+    noeuds sont gardés - mais c'est aussi le cas de la plupart des autres
+    algorithmes de ce genre
   - historique: Peter Hart, Nils Nilsson et Bertram Raphael ont créé cet
     algorithme en 1968, en tant qu'extension de l'algorithme de Dijkstra de
     1959, pour le projet de robot "Shakey"
@@ -30,7 +32,7 @@
   - si on utilise une *heuristique admissible*, c'est-à-dire qui *ne surestime
     jamais la distance*, alors A* trouvera toujours le chemin le plus court
     - cas extrême: évaluer la "distance" toujours à 0, auquel cas A* redevient
-    l'algorithme de Dijkstra et trouve toujours la solution optimale
+      l'algorithme de Dijkstra et trouve toujours la solution optimale
     - exemple d'heuristiques admissibles utiles: distance à vol d'oiseau,
       Manhattan distance si mouvements verticaux et horizontaux seuls permis,
       octile distance (permet diagonales)
