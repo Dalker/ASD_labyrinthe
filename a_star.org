@@ -2,11 +2,9 @@
 #+AUTHOR: Dalker (daniel.kessler@dalker.org)
 
 * sources:
-  https://fr.wikipedia.org/wiki/Algorithme_A* et
+  https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+  https://fr.wikipedia.org/wiki/Algorithme_A*
   https://en.wikipedia.org/wiki/A*_search_algorithm
-
-  NB: parfois les deux se contredisent (notamment sur la mémoire, ou la
-  v. anglaise semble plus crédible)
 
 * caractéristiques
   - but: recherche de chemin dans un *graphe* entre deux *noeuds* donnés
@@ -29,6 +27,18 @@
     délibérément les directions qui pointent vers la sortie
     -> dans un labyrinthe compliqué, ce n'est peut-être pas terrible; dans d'autres
        situations, c'est souvent très efficace
+* comparaison avec autres algorithmes
+  - l'algo de Dijkstra choisit les noeuds à explorer les plus proches du départ,
+    et garantit un chemin optimal à la fin; souvent, il essaye beaucoup de
+    possibilités qui semblent assez évidemment mauvaises, mais à la fin il aboutit
+  - le "greedy best-first-search" algorithm avance pas par pas en choisissant le
+    voisin le plus proche de la sortie, quitte à aboutir à un chemin
+    sous-optimal, mais la recherche est assez rapide
+  - A* pondère les deux, en prenant en compte à la fois la distance depuis le
+    départ et la distance estimée vers la sortie, et si on respecte la règle
+    d'admissibilité pour l'estimation, alors on a la garantie d'un chemin
+    optimal tout en explorant de manière (généralement) plus efficace que
+    Dijkstra
 * propriétés (cf. wikipedia - à détailler avec autres sources)
   - si on utilise une *heuristique admissible*, c'est-à-dire qui *ne surestime
     jamais la distance*, alors A* trouvera toujours le chemin le plus court
