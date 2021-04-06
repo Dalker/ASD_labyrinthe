@@ -10,7 +10,8 @@
 
 * caractéristiques
   - but: recherche de chemin dans un *graphe* entre deux *noeuds* donnés
-    [NB: on n'a *pas* 
+    [NB: on n'a *pas* besoin d'avoir construit le graphe à l'avance, et on
+    n'aura pas besoin d'un graphe complet si on trouve un chemin avant en cours d'exploration]
   - la première solution sera une des meilleures (mais pas forcément /la/ meilleure)
     -> utile en pratique (rapidité de calcul) 
     [en fait on trouve bien la solution optimale si on fait un peu attention à l'heuristique]
