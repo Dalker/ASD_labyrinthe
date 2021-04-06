@@ -1,0 +1,78 @@
+#+TITLE: Algorithme A*
+#+AUTHOR: Dalker (daniel.kessler@dalker.org)
+
+* sources:
+  https://fr.wikipedia.org/wiki/Algorithme_A* et
+  https://en.wikipedia.org/wiki/A*_search_algorithm
+
+  NB: parfois les deux se contredisent (notamment sur la mémoire, ou la
+  v. anglaise semble plus crédible)
+
+* caractéristiques
+  - but: recherche de chemin dans un *graphe* entre deux *noeuds* donnés
+  - la première solution sera une des meilleures (mais pas forcément /la/ meilleure)
+    -> utile en pratique (rapidité de calcul)
+  - autres avantages: simplicité, pas de prétraitement (pas d'"omniscience" initiale)
+  - inconvénient: peut nécessiter beaucoup d'espace (mémoire) vu que tous les
+    noeuds sont gardés (d'autres approches réduisent la mémoire avec une
+    pré-construction du graphe complet)
+  - historique: Peter Hart, Nils Nilsson et Bertram Raphael ont créé cet
+    algorithme en 1968, en tant qu'extension de l'algorithme de Dijkstra de
+    1959, pour le projet de robot "Shakey"
+* intuition
+  - le graphe représente une *carte* où les arêtes sont des *chemins* possibles
+    entre noeuds
+  - au lieu de faire du "breadth-first" complet, on privilégie à chaque fois
+    délibérément les directions qui pointent vers la sortie
+    dans un labyrinthe compliqué, ce n'est peut-être pas terrible; dans d'autres
+    situations, c'est souvent très efficace
+* propriétés (cf. wikipedia - à détailler avec autres sources)
+  - si on utilise une *heuristique admissible*, c'est-à-dire qui *ne surestime
+    jamais la distance*, alors A* trouvera toujours le chemin le plus court
+    - cas extrême: évaluer la "distance" toujours à 0, auquel cas A* redevient
+    l'algorithme de Dijkstra et trouve toujours la solution optimale
+    - exemple d'heuristiques admissibles utiles: distance à vol d'oiseau,
+      Manhattan distance si mouvements verticaux et horizontaux seuls permis,
+      octile distance (permet diagonales)
+    - heuristique idéale (pas possible dans la réalité): distance réelle
+  - il est démontrable que A* a une efficacité maximale pour une heuristique donnée
+* comment ça marche?
+** Structures de données
+  Au départ, on a un *graphe* vide, puis on y ajoute des noeuds en cours
+  d'exploration. Chaque noeud a deux coûts:
+  - un *coût réel* pour l'atteindre depuis le départ par un chemin connu
+  - un *coût heuristique* pour atteindre la sortie depuis ce noeud (estimation de distance)
+  La somme des deux est une estimation du coût d'un chemin passant par ce noeud.
+  En plus, le noeud doit connaître son *prédecesseur* selon le meilleur chemin
+  connu pour l'instant passant par lui, afin de pouvoir reconstituer le chemin final.
+
+  On utilise deux structures de données supplémentaires en plus du graphe:
+  - l' "open list" ou "fringe" qui est une *priority queue* (ou "file
+    d'attente") des noeuds à traiter, la priorité étant donnée à l'élément avec
+    le plus bas coût estimé (somme de coût réel jusqu'au noeud + coût estimé
+    jusqu'à la sortie)
+  NB: apparemment on peut implémenter la priority queue efficacement avec une
+  structure de donnée de type *Fibonacci heap*:
+  https://en.wikipedia.org/wiki/Fibonacci_heap (à explorer séparément)
+  - une "closed list" qui est un *ensemble* des noeuds déjà traités (intialement vide)
+** Algorithme
+  Tant qu'il y a des éléments à traiter:
+  - on extrait l'élément prioritaire de la "file d'attente", la priorité étant
+    donnée à l'élément de plus faible coût heuristique
+  - si c'est la destination, on reconstitue le chemin pour y arriver et on arrête
+    NB: avec heuristique admissible, le coût estimé est alors forcément le coût
+    réel (vu que la distance, réellement nulle, ne peut pas être sur-estimée)
+  - sinon, pour chacun des voisins:
+    * s'il est dans la "closed list" on passe (il a déjà été traité)
+    * s'il est dans la file d'attente avec avec un coût estimé inférieur au
+      noeud actuel on passe (il y a un moyen plus rapide de passer par ce noeud)
+    * sinon,
+      - on calcule le coût pour accéder au voisin (coût du noeud courant + coût
+        du déplacement)
+      - on calcule le coût heuristique pour le nouveau noeud: son coût
+        (cf. ci-dessus) + sa distance heuristique à l'objectif
+      - on l'ajoute à la file d'attente
+    * on ajoute le noeud actuel à la liste des noeuds traités
+  S'il n'y a plus d'éléments à traiter, cela signifie que la destination ne peut
+  pas être atteinte depuis le noeud initial.
+
