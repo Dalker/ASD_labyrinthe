@@ -6,7 +6,6 @@ des "arêtes" avec un coût de 1.
 
 Author: Dalker (daniel.kessler@dalker.org)
 Date: 2021.04.06
-
 """
 
 import logging as log
