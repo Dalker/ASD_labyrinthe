@@ -2,10 +2,9 @@
 #+AUTHOR: Dalker (daniel.kessler@dalker.org)
 
 * sources:
-  https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
-  https://fr.wikipedia.org/wiki/Algorithme_A*
-  https://en.wikipedia.org/wiki/A*_search_algorithm
-
+  - https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+  - https://fr.wikipedia.org/wiki/Algorithme_A*
+  - https://en.wikipedia.org/wiki/A*_search_algorithmx
 * caractéristiques
   - but: recherche de chemin dans un *graphe* entre deux *noeuds* donnés
     [NB: on n'a *pas* besoin d'avoir construit le graphe à l'avance, et on
