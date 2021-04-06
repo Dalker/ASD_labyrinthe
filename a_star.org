@@ -27,8 +27,8 @@
     entre noeuds
   - au lieu de faire du "breadth-first" complet, on privilégie à chaque fois
     délibérément les directions qui pointent vers la sortie
-    dans un labyrinthe compliqué, ce n'est peut-être pas terrible; dans d'autres
-    situations, c'est souvent très efficace
+    -> dans un labyrinthe compliqué, ce n'est peut-être pas terrible; dans d'autres
+       situations, c'est souvent très efficace
 * propriétés (cf. wikipedia - à détailler avec autres sources)
   - si on utilise une *heuristique admissible*, c'est-à-dire qui *ne surestime
     jamais la distance*, alors A* trouvera toujours le chemin le plus court
