@@ -33,8 +33,8 @@ class Grid():
     - ascii: représentation ASCII de la grille
     - n_rows: nombre de lignes
     - n_cols: nombre de colonnes
-    - content: liste de listes de booléens
-               (True: on peut passer, False: obstacle)
+    - passable: liste de listes de booléens
+                (True: on peut passer, False: obstacle)
     - in_: tuple (row, col) de l'entrée [NB: in est interdit comme identifiant]
     - out: tuple (row, col) de la sortie
     """
@@ -57,7 +57,7 @@ class Grid():
             "la grille devrait être rectangulaire"
         log.debug("created grid with %d rows and %d cols",
                   self.n_rows, self.n_cols)
-        self.content = [[char != "#" for char in row] for row in rows]
+        self.passable = [[char != "#" for char in row] for row in rows]
         for n_row, row in enumerate(rows):
             for n_col, char in enumerate(row):
                 if char == "I":
@@ -70,11 +70,11 @@ class Grid():
         return self.ascii
 
     def __contains__(self, cell):
-        """La cellule est-elle dans la grille?"""
+        """La cellule est-elle dans la grille et traversable?"""
         row, col, *_ = cell  # décomposer le tuple de coordonnées
         if (0 <= row < self.n_rows and
                 0 <= col < self.n_cols and
-                self.content[row][col]):
+                self.passable[row][col]):
             return True
         return False
 
@@ -89,7 +89,7 @@ class Grid():
 
 class Fringe():
     """
-    Ensemble de cellules en attente de traitement.
+    Ensemble de cellules en attente de traitement avec informations de coût.
 
     Une cellule est un tuple (row, col, cost). Le Fringe associe à chacune
     aussi un coût estimé, qui doit être fourni lorsque la cellule est ajoutée.
@@ -99,8 +99,8 @@ class Fringe():
 
     D'après nos recherches, un "Fibonacci Heap" est optimal pour ce cas, mais
     pour l'instant nous utilisons un "Heap" beaucoup plus basique et facile à
-    manipuler, à savoir un dict. L'implémentation de cette classe peut être
-    modifiée par la suite sans en modifier l'interface.
+    manipuler, à savoir un (ou plusieurs) dict. L'implémentation de cette
+    classe peut être modifiée par la suite sans en modifier l'interface.
     """
 
     def __init__(self, first_cell):
@@ -121,7 +121,8 @@ class Fringe():
         estimé est plus bas que le précédent.
 
         Entrées:
-        - cell: cellule sous forme (row, col, cout_reel_pour_arriver_a_cell)
+        - cell: cellule sous forme (row, col)
+        - real_cost: coût réel pour arriver jusqu'à cette cellule
         - estimated_cost: coût estimé d'un chemin complet passant par cell
         - predecessor: cellule précédente dans le chemin arrivant à cell
                        avec le coût réel indiqué
@@ -132,7 +133,11 @@ class Fringe():
             self._predecessor[cell] = predecessor
 
     def pop(self):
-        """Extraire un noeud de bas coût ainsi que son prédecesseur."""
+        """
+        Extraire un noeud de bas coût ainsi que son prédecesseur.
+
+        Sortie: tuple (cellule, prédecesseur, coût)
+        """
         if not self._heuristic:  # fringe is empty
             return None, None, None
         least = min(self._heuristic,
@@ -146,6 +151,7 @@ def astar(grid):
     Trouver un chemin optimal dans une grille par algorithme A*.
 
     Entrée: un objet Grid.
+    Sortie: une liste de cellules successives constituant un chemin
     """
     closed = dict()  # associations cellule_traitée -> prédecesseur
     fringe = Fringe(grid.in_)  # file d'attente de cellules à traiter
