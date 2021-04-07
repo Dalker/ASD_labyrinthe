@@ -56,7 +56,7 @@ class Grid():
         assert all((len(row) == self.n_cols) for row in rows),\
             "la grille devrait être rectangulaire"
         log.debug("created grid with %d rows and %d cols",
-                 self.n_rows, self.n_cols)
+                  self.n_rows, self.n_cols)
         self.content = [[char != "#" for char in row] for row in rows]
         for n_row, row in enumerate(rows):
             for n_col, char in enumerate(row):
@@ -64,6 +64,10 @@ class Grid():
                     self.in_ = (n_row, n_col)
                 elif char == "O":
                     self.out = (n_row, n_col)
+
+    def __str__(self):
+        """Restituer une vue ASCII de la grille."""
+        return self.ascii
 
     def __contains__(self, cell):
         """La cellule est-elle dans la grille?"""
@@ -172,12 +176,12 @@ def test(asciimaze):
     """Effectuer un test avec la grille donnée."""
     grid = Grid(asciimaze)
     print("Trying to find an A* path in grid:")
-    print(grid.ascii)
+    print(grid)
     path = astar(grid)
     if path is not None:
         grid.add_path(path)
         print("A* solution found:")
-        print(grid.ascii)
+        print(grid)
     else:
         print("No A* solution found.")
     print()
