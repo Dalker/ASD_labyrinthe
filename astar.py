@@ -1,11 +1,19 @@
-"""Première tentative d'implémenter A* pour le projet ASD1-Labyrinthes.
+"""
+Première tentative d'implémenter A* pour le projet ASD1-Labyrinthes.
 
 On part d'une grille rectangulaire. Chaque case est un "noeud". Les
 déplacements permis sont verticaux et horizontaux par pas de 1, représentant
 des "arêtes" avec un coût de 1.
 
+Tout est basé sur une grille rectangulaire.
+
+L'objet de base est une cellule, représentée par un tuple (row, col, cost), où
+(row, col) sont des coordonnées dans la grille et cost le coût réel pour
+arriver jusqu'à cette cellule depuis le départ, s'il est déjà connu, None
+sinon.
+
 Author: Dalker (daniel.kessler@dalker.org)
-Date: 2021.04.06
+Start Date: 2021.04.06
 """
 
 import logging as log
@@ -17,7 +25,12 @@ class Grid():
     """
     Grille à résoudre par l'algorithme (vrai labyrinthe ou autre).
 
+    NB: la grille est fixe et ne connaît pas les coûts, donc ne gère que des
+    cellules représentées par des tuples (row, col), tout en acceptant
+    (row, col, _) comme entrée de ses méthodes.
+
     Attributs:
+    - ascii: représentation ASCII de la grille
     - n_rows: nombre de lignes
     - n_cols: nombre de colonnes
     - content: liste de listes de booléens
@@ -36,13 +49,14 @@ class Grid():
           'O' pour la sortie
         Tout autre caractère est interprété comme "on peut passer"
         """
-        rows = ascii_grid.strip().split("\n")
+        self.ascii = ascii_grid.strip()
+        rows = self.ascii.split("\n")
         self.n_rows = len(rows)
         self.n_cols = len(rows[0])
         assert all((len(row) == self.n_cols) for row in rows),\
             "la grille devrait être rectangulaire"
-        log.debug("created grid with %d rows and %d cols",
-                  self.n_rows, self.n_cols)
+        log.info("created grid with %d rows and %d cols",
+                 self.n_rows, self.n_cols)
         self.content = [[char != "#" for char in row] for row in rows]
         for n_row, row in enumerate(rows):
             for n_col, char in enumerate(row):
@@ -51,40 +65,33 @@ class Grid():
                 elif char == "O":
                     self.out = (n_row, n_col)
 
+    def __contains__(self, cell):
+        """La cellule est-elle dans la grille?"""
+        row, col, *_ = cell  # décomposer le tuple de coordonnées
+        if (0 <= row < self.n_rows and
+                0 <= col < self.n_cols and
+                self.content[row][col]):
+            return True
+        return False
 
-class Node():
-    """
-    Noeud lors de l'exploration de la grille.
-
-    Attributs:
-    - coords: coordonnées de ce noeud dans la grille (tuple (row, col))
-    - in_cost: coût réel pour accéder à ce noeud depuis l'entrée
-    - total_cost: coût estimé pour cheminer de l'entrée jusqu'à la sortie via
-                  ce noeud
-    - predecessor: noeud précédent dans le chemin optimal arrivant à ce noeud
-    """
-
-    def __init__(self, coords, in_cost=0, total_cost=None, predecessor=None):
-        """Initialiser un node."""
-        self.coords = coords
-        self.in_cost = 0
-        self.total_cost = self.in_cost if total_cost is None else total_cost
-        self.predecessor = predecessor
-
-    def __lt__(self, other):
-        """Comparaison pour utiliser les nodes dans une PriorityQueue."""
-        return self.total_cost < other.total_cost
-
-    def __str__(self):
-        """Retourner une représentation en str."""
-        return f"Node({self.coords}, cost={self.total_cost})"
+    def add_path(self, path):
+        """Ajouter un chemin à la représentation ASCII de la grille."""
+        asciirows = self.ascii.split("\n")
+        self.ascii = "\n".join([
+            "".join(["*" if (row, col) in path else asciirows[row][col]
+                     for col in range(self.n_cols)])
+            for row in range(self.n_rows)])
 
 
 class Fringe():
-    """Ensemble de nodes en attente de traitement.
+    """
+    Ensemble de cellules en attente de traitement.
 
-    On doit pouvoir extraire efficacement un node de priorité minimale, mais
-    aussi chercher un node et modifier la priorité d'un node.
+    Une cellule est un tuple (row, col, cost). Le Fringe associe à chacune
+    aussi un coût estimé, qui doit être fourni lorsque la cellule est ajoutée.
+
+    On doit pouvoir extraire efficacement une cellule de priorité minimale,
+    mais aussi chercher une cellule et modifier la priorité d'un node.
 
     D'après nos recherches, un "Fibonacci Heap" est optimal pour ce cas, mais
     pour l'instant nous utilisons un "Heap" beaucoup plus basique et facile à
@@ -92,32 +99,87 @@ class Fringe():
     modifiée par la suite sans en modifier l'interface.
     """
 
-    def __init__(self, first_node):
-        """Initialiser le fringe."""
-        self._contents = {first_node.coords: first_node}
+    def __init__(self, first_cell):
+        """
+        Initialiser le fringe.
+
+        Entrée: un tuple (ligne, colonne) indiquant l'entrée du labyrinthe.
+        """
+        self._cost = {first_cell: 0}
+        self._heuristic = {first_cell: 0}
+        self._predecessor = {first_cell: None}
+
+    def append(self, cell, real_cost, estimated_cost, predecessor=None):
+        """
+        Ajouter une cellule au fringe ou la mettre à jour.
+
+        Si la cellule est déjà présente, on la met à jour si le nouveau coût
+        estimé est plus bas que le précédent.
+
+        Entrées:
+        - cell: cellule sous forme (row, col, cout_reel_pour_arriver_a_cell)
+        - estimated_cost: coût estimé d'un chemin complet passant par cell
+        - predecessor: cellule précédente dans le chemin arrivant à cell
+                       avec le coût réel indiqué
+        """
+        if cell not in self._heuristic:
+            self._cost[cell] = real_cost
+            self._heuristic[cell] = estimated_cost
+            self._predecessor[cell] = predecessor
 
     def pop(self):
-        """Extraire un noeud de bas coût."""
-        least = min(self._contents,
-                    key=lambda coords: self._contents[coords].total_cost)
-        least_node = self._contents[least]
-        del self._contents[least]
-        return least_node
+        """Extraire un noeud de bas coût ainsi que son prédecesseur."""
+        if not self._heuristic:  # fringe is empty
+            return None, None, None
+        least = min(self._heuristic,
+                    key=lambda cell: self._heuristic[cell])
+        del self._heuristic[least]
+        return least, self._predecessor[least], self._cost[least]
 
 
 def astar(grid):
-    """Trouver un chemin optimal dans une grille par algorithme A*."""
-    grid = Grid(grid)
-    fringe = Fringe(Node(grid.in_))
-    print(fringe.pop())
+    """
+    Trouver un chemin optimal dans une grille par algorithme A*.
+
+    Entrée: un objet Grid.
+    """
+    closed = dict()  # associations cellule_traitée -> prédecesseur
+    fringe = Fringe(grid.in_)  # file d'attente de cellules à traiter
+    while True:
+        current, predecessor, cost = fringe.pop()
+        if current is None:
+            log.info("Le labyrinthe ne peut pas être résolu.")
+            return None
+        if current == grid.out:
+            log.info("Found exit!")
+            path = [current]
+            current = predecessor
+            while current in closed:
+                path.append(current)
+                current = closed[current]
+            return list(reversed(path))
+        cost += 1
+        for direction in ((0, 1), (0, -1), (-1, 0), (1, 0)):
+            neighbour = tuple(current[j] + direction[j] for j in (0, 1))
+            if neighbour not in grid or neighbour in closed:
+                continue
+            distance = sum(abs(neighbour[j] - grid.out[j]) for j in (0, 1))
+            fringe.append(neighbour, cost, cost+distance, predecessor=current)
+        closed[current] = predecessor
 
 
-def test(grid):
+def test(asciimaze):
     """Effectuer un test avec la grille donnée."""
-    astar(grid)
+    grid = Grid(asciimaze)
+    path = astar(grid)
+    if path is not None:
+        grid.add_path(path)
+        print(grid.ascii)
 
 
 if __name__ == "__main__":
     log.basicConfig(level=log.DEBUG)
-    log.info("starting test")
+    log.info("starting unsolvable test")
+    test("#I#O#")
+    log.info("starting basic test")
     test(architecte.GRILLE1)
