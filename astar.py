@@ -132,7 +132,7 @@ class Fringe():
         - predecessor: cellule précédente dans le chemin arrivant à cell
                        avec le coût réel indiqué
         """
-        if cell not in self.heuristic:
+        if cell not in self.heuristic or estimated_cost < self.heuristic[cell]:
             self._cost[cell] = real_cost
             self.heuristic[cell] = estimated_cost
             self._predecessor[cell] = predecessor
