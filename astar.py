@@ -105,6 +105,7 @@ class Fringe():
     classe peut être modifiée par la suite sans en modifier l'interface.
 
     Attributs:
+    - cost: coût réel pour accéder à cette cellule
     - heuristic: coût heuristique d'une cellule
     """
 
@@ -114,7 +115,7 @@ class Fringe():
 
         Entrée: un tuple (ligne, colonne) indiquant l'entrée du labyrinthe.
         """
-        self._cost = {first_cell: 0}
+        self.cost = {first_cell: 0}
         self.heuristic = {first_cell: 0}
         self._predecessor = {first_cell: None}
 
@@ -123,7 +124,8 @@ class Fringe():
         Ajouter une cellule au fringe ou la mettre à jour.
 
         Si la cellule est déjà présente, on la met à jour si le nouveau coût
-        estimé est plus bas que le précédent.
+        est plus bas que le précédent (on a trouvé un meilleur chemin pour y
+        arriver).
 
         Entrées:
         - cell: cellule sous forme (row, col)
@@ -132,8 +134,8 @@ class Fringe():
         - predecessor: cellule précédente dans le chemin arrivant à cell
                        avec le coût réel indiqué
         """
-        if cell not in self.heuristic or estimated_cost < self.heuristic[cell]:
-            self._cost[cell] = real_cost
+        if cell not in self.cost or real_cost < self.cost[cell]:
+            self.cost[cell] = real_cost
             self.heuristic[cell] = estimated_cost
             self._predecessor[cell] = predecessor
 
@@ -148,7 +150,7 @@ class Fringe():
         least = min(self.heuristic,
                     key=lambda cell: self.heuristic[cell])
         del self.heuristic[least]
-        return least, self._predecessor[least], self._cost[least]
+        return least, self._predecessor[least], self.cost[least]
 
 
 class AstarView():
