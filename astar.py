@@ -18,6 +18,8 @@ Start Date: 2021.04.06
 
 import logging as log
 
+import matplotlib.pyplot as plt
+
 import architecte
 
 
@@ -101,6 +103,9 @@ class Fringe():
     pour l'instant nous utilisons un "Heap" beaucoup plus basique et facile à
     manipuler, à savoir un (ou plusieurs) dict. L'implémentation de cette
     classe peut être modifiée par la suite sans en modifier l'interface.
+
+    Attributs:
+    - heuristic: coût heuristique d'une cellule
     """
 
     def __init__(self, first_cell):
@@ -110,7 +115,7 @@ class Fringe():
         Entrée: un tuple (ligne, colonne) indiquant l'entrée du labyrinthe.
         """
         self._cost = {first_cell: 0}
-        self._heuristic = {first_cell: 0}
+        self.heuristic = {first_cell: 0}
         self._predecessor = {first_cell: None}
 
     def append(self, cell, real_cost, estimated_cost, predecessor=None):
@@ -127,9 +132,9 @@ class Fringe():
         - predecessor: cellule précédente dans le chemin arrivant à cell
                        avec le coût réel indiqué
         """
-        if cell not in self._heuristic:
+        if cell not in self.heuristic:
             self._cost[cell] = real_cost
-            self._heuristic[cell] = estimated_cost
+            self.heuristic[cell] = estimated_cost
             self._predecessor[cell] = predecessor
 
     def pop(self):
@@ -138,15 +143,60 @@ class Fringe():
 
         Sortie: tuple (cellule, prédecesseur, coût)
         """
-        if not self._heuristic:  # fringe is empty
+        if not self.heuristic:  # fringe is empty
             return None, None, None
-        least = min(self._heuristic,
-                    key=lambda cell: self._heuristic[cell])
-        del self._heuristic[least]
+        least = min(self.heuristic,
+                    key=lambda cell: self.heuristic[cell])
+        del self.heuristic[least]
         return least, self._predecessor[least], self._cost[least]
 
 
-def astar(grid):
+class AstarView():
+    """
+    Visualisation de l'avancée de l'algorithme A*.
+
+    Attributs:
+    - grid: Grid
+    - fringe: Fringe
+    - closed: list
+    Tous trois sont des références aux objects manipulés en cours d'algorithme.
+    Les modifications sont donc visibles automatiquement.
+    """
+
+    def __init__(self, grid, fringe, closed):
+        """Initialiser la vue."""
+        self.grid = grid
+        self.fringe = fringe
+        self.closed = closed
+        _, self._axes = plt.subplots()
+        self.max_color = 2*sum(abs(grid.in_[j] - grid.out[j]) for j in (0, 1))
+        self._matrix = [[0 if self.grid.passable[row][col]
+                         else 2*self.max_color
+                         for col in range(grid.n_cols)]
+                        for row in range(grid.n_rows)]
+        self._image = self._axes.matshow(self._matrix)
+        self._axes.set_axis_off()
+        self.update()
+
+    def update(self):
+        """Update and display the view of the Maze."""
+        for cell in self.fringe.heuristic:
+            row, col = cell
+            heuristic = self.fringe.heuristic[cell]
+            self._matrix[row][col] = heuristic
+            self._image.set_data(self._matrix)
+        plt.pause(0.001)
+
+    def showpath(self, path):
+        """Montrer le chemin trouvé et laisser l'image visible."""
+        for row, col in path:
+            self._matrix[row][col] = self.max_color
+            self._image.set_data(self._matrix)
+            plt.pause(0.001)
+        plt.show()
+
+
+def astar(grid, view=False):
     """
     Trouver un chemin optimal dans une grille par algorithme A*.
 
@@ -155,6 +205,8 @@ def astar(grid):
     """
     closed = dict()  # associations cellule_traitée -> prédecesseur
     fringe = Fringe(grid.in_)  # file d'attente de cellules à traiter
+    if view:
+        astar_view = AstarView(grid, fringe, closed)
     while True:
         current, predecessor, cost = fringe.pop()
         if current is None:
@@ -167,7 +219,10 @@ def astar(grid):
             while current in closed:
                 path.append(current)
                 current = closed[current]
-            return list(reversed(path))
+            path = list(reversed(path))
+            if view:
+                astar_view.showpath(path)
+            return path
         cost += 1
         for direction in ((0, 1), (0, -1), (-1, 0), (1, 0)):
             neighbour = tuple(current[j] + direction[j] for j in (0, 1))
@@ -175,15 +230,19 @@ def astar(grid):
                 continue
             distance = sum(abs(neighbour[j] - grid.out[j]) for j in (0, 1))
             fringe.append(neighbour, cost, cost+distance, predecessor=current)
+            if view:
+                astar_view.update()
         closed[current] = predecessor
+        if view:
+            astar_view.update()
 
 
-def test(asciimaze):
+def test(asciimaze, view=False):
     """Effectuer un test avec la grille donnée."""
     grid = Grid(asciimaze)
     print("Trying to find an A* path in grid:")
     print(grid)
-    path = astar(grid)
+    path = astar(grid, view)
     if path is not None:
         grid.add_path(path)
         print("A* solution found:")
@@ -198,4 +257,4 @@ if __name__ == "__main__":
     print("* starting unsolvable test *")
     test("#I#O#")
     print("* starting basic test *")
-    test(architecte.GRILLE1)
+    test(architecte.GRILLE1, view=True)
