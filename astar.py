@@ -55,7 +55,7 @@ class Grid():
         self.n_cols = len(rows[0])
         assert all((len(row) == self.n_cols) for row in rows),\
             "la grille devrait être rectangulaire"
-        log.info("created grid with %d rows and %d cols",
+        log.debug("created grid with %d rows and %d cols",
                  self.n_rows, self.n_cols)
         self.content = [[char != "#" for char in row] for row in rows]
         for n_row, row in enumerate(rows):
@@ -148,10 +148,10 @@ def astar(grid):
     while True:
         current, predecessor, cost = fringe.pop()
         if current is None:
-            log.info("Le labyrinthe ne peut pas être résolu.")
+            log.debug("Le labyrinthe ne peut pas être résolu.")
             return None
         if current == grid.out:
-            log.info("Found exit!")
+            log.debug("Found exit!")
             path = [current]
             current = predecessor
             while current in closed:
@@ -171,15 +171,21 @@ def astar(grid):
 def test(asciimaze):
     """Effectuer un test avec la grille donnée."""
     grid = Grid(asciimaze)
+    print("Trying to find an A* path in grid:")
+    print(grid.ascii)
     path = astar(grid)
     if path is not None:
         grid.add_path(path)
+        print("A* solution found:")
         print(grid.ascii)
+    else:
+        print("No A* solution found.")
+    print()
 
 
 if __name__ == "__main__":
-    log.basicConfig(level=log.DEBUG)
-    log.info("starting unsolvable test")
+    log.basicConfig(level=log.INFO)
+    print("* starting unsolvable test *")
     test("#I#O#")
-    log.info("starting basic test")
+    print("* starting basic test *")
     test(architecte.GRILLE1)
