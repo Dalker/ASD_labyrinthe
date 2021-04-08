@@ -79,18 +79,18 @@ class Maze():
 
     def carve(self, cell, direction):
         "open path from a node in given direction"
-        row = cell[0]
-        col = cell[1]
+        row = cell[0]*2+1
+        col = cell[1]*2+1
         if 0 <= row+direction[0] < self.rows\
                 and 0 <= col+direction[1] < self.cols:
             if direction == (-1, 0):  # up
-                self.grid[row][col] = True
+                self.passable[row-1][col] = True
             elif direction == (1, 0):  # down
-                self.grid[row+1][col] = True
+                self.passable[row+1][col] = True
             elif direction == (0, -1):  # left
-                self.grid[row][col] = True
+                self.passable[row][col-1] = True
             elif direction == (0, 1):  # right
-                self.grid[row][col+1] = True
+                self.passable[row][col+1] = True
             return True
         else:
             log.debug("tried impossible destination %d %d",
