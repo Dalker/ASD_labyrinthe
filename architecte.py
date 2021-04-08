@@ -57,8 +57,11 @@ class Maze():
         self.entrance = None
         self.exit = None
         self.reset()
-
+    
+    
     def fill_str(self):
+        """ Sert à générer un grid ascii mais on va laisser tomber au profit du grid "passable"
+        """
         self.grid = ""
         for _ in range(self.rows):
             self.grid += "#" * (2*self.cols+1) + "\n"
@@ -68,6 +71,8 @@ class Maze():
             
 
     def fill_passable(self):
+        """ Génère une grid 'passable' qui contient des True là où c'est libre et des False là où il y a un obstacle (un mur)
+        """
         self.passable = [[False] * (self.cols*2+1)], [[False, True] * self.cols + [False]] * self.rows, [[False] * (self.cols*2+1)]
     return True
             
