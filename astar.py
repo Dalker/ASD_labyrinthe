@@ -194,7 +194,7 @@ class AstarView():
         for row, col in path:
             self._matrix[row][col] = self.max_color
             self._image.set_data(self._matrix)
-            plt.pause(0.001)
+            plt.pause(0.1)
         plt.show()
 
 
@@ -259,4 +259,4 @@ if __name__ == "__main__":
     print("* starting unsolvable test *")
     test("#I#O#")
     print("* starting basic test *")
-    test(architecte.GRILLE1, view=True)
+    test(architecte.GRILLE2, view=True)
