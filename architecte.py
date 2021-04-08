@@ -159,9 +159,9 @@ class Maze():
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
-        self.grid = ""
-        self.entrance = None
-        self.exit = None
+        # self.grid = ""
+        # self.entrance = (0, 0)
+        # self.exit = (rows, cols)
         self.fill_passable()
         self.generate()
     
@@ -230,6 +230,7 @@ class Maze():
             cell = nextcell
         return True
 
+
     def __str__(self):
         """ sort un string qui représente grossièrement notre labyrinthe
             avec des "#" pour les obstacles (murs) et des " " pour les cases ouvertes
@@ -243,7 +244,7 @@ class Maze():
 
 
 if __name__ == "__main__":
-    rows, cols = 30, 30
+    rows, cols = 5, 30
     
     GRILLE1 = Maze(rows,cols)
     print(GRILLE1)
