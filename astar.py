@@ -259,4 +259,7 @@ if __name__ == "__main__":
     print("* starting unsolvable test *")
     test("#I#O#")
     print("* starting basic test *")
-    test(architecte.GRILLE1, view=True)
+    # test(architecte.GRILLE10x10, view=True)
+    test(architecte.GRILLE20x20, view=True)
+    # test(architecte.GRILLE30x30, view=True)
+    
