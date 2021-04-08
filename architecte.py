@@ -5,6 +5,9 @@ par M. Barros
 démarré le 2021.04.06
 """
 
+import random
+
+
 GRILLE1 = """
 ###############
 ####### #     I
@@ -56,7 +59,8 @@ class Maze():
         self.grid = ""
         self.entrance = None
         self.exit = None
-        self.reset()
+        self.fill_passable()
+        self.generate()
     
     
     def fill_str(self):
@@ -73,30 +77,29 @@ class Maze():
     def fill_passable(self):
         """ Génère une grid 'passable' qui contient des True là où c'est libre et des False là où il y a un obstacle (un mur)
         """
-        self.passable = [[False] * (self.cols*2+1)], [[False, True] * self.cols + [False]] * self.rows, [[False] * (self.cols*2+1)]
-    return True
+        # self.passable = [[False] * (self.cols*2+1), [False, True] * self.cols + [False]] * self.rows, [[False] * (self.cols*2+1)]
+        self.passable = []
+        for row in range(rows):
+            self.passable += [[False] * (cols*2+1)]
+            self.passable += [[False, True] * (cols) + [False]]
+        self.passable += [[False] * (cols*2+1)]
+        # print(self.passable)
+        return True
             
 
     def carve(self, cell, direction):
         "open path from a node in given direction"
         row = cell[0]*2+1
         col = cell[1]*2+1
-        if 0 <= row+direction[0] < self.rows\
-                and 0 <= col+direction[1] < self.cols:
-            if direction == (-1, 0):  # up
-                self.passable[row-1][col] = True
-            elif direction == (1, 0):  # down
-                self.passable[row+1][col] = True
-            elif direction == (0, -1):  # left
-                self.passable[row][col-1] = True
-            elif direction == (0, 1):  # right
-                self.passable[row][col+1] = True
-            return True
-        else:
-            log.debug("tried impossible destination %d %d",
-                      row+direction[0],
-                      col+direction[1])
-            return False
+        # if 0 <= row+direction[0] < self.rows and 0 <= col+direction[1] < self.cols:
+        if direction == (-1, 0):  # up
+            self.passable[row-1][col] = True
+        elif direction == (1, 0):  # down
+            self.passable[row+1][col] = True
+        elif direction == (0, -1):  # left
+            self.passable[row][col-1] = True
+        elif direction == (0, 1):  # right
+            self.passable[row][col+1] = True
 
 
     def generate(self):
@@ -104,7 +107,6 @@ class Maze():
         random walk until all cells are added
         any time a non-visited cell is reach, a wall is broken on the way
         """
-        fill
         directions = {(-1, 0), (1, 0), (0, -1), (0, 1)}
         visited = set()  # visited cells
         # initial node is random
@@ -120,14 +122,22 @@ class Maze():
                                and 0 <= nextcell[1] < self.cols)
             # if next is new, break a wall to get there
             if nextcell not in visited:
-                carve(cell, direction)
+                self.carve(cell, direction)
             # visit next
             cell = nextcell
 
 
+    def __str__(self):
+        """ sort un string qui représente grossièrement notre labyrinthe
+            avec des "#" pour les obstacles (murs) et des " " pour les cases ouvertes
+        """
+        grid = ""
+        for row in range(self.rows*2+1):
+            for col in range(self.cols*2+1):
+                grid += " " if self.passable[row][col] else "#"
+            grid += "\n"
+        return grid
+
 if __name__ == "__main__":
-    passable = [[False] * (3*2+1)], [[False, True] * 3 + [False]] * 2, [[False] * (3*2+1)]
-    print(passable)
-    # maze1 = Maze()
-    # maze1.fill
-    
+    rows, cols = 10, 10
+    print(Maze(rows,cols))
