@@ -9,6 +9,8 @@ import itertools as it
 
 import labyrinthe
 
+import generateur_ab as ab
+
 
 GRILLE10x10 = """
 #####################
@@ -181,7 +183,7 @@ class LabyrintheAscii(labyrinthe.Labyrinthe):
         row, col = cell
         return False if self._matrice[row][col] == "#" else True
 
-
+MAZE_XX = LabyrintheAscii(str(ab.Maze(10, 10)))
 MAZE10 = LabyrintheAscii(GRILLE10x10)
 MAZE20 = LabyrintheAscii(GRILLE20x20)
 MAZE30 = LabyrintheAscii(GRILLE30x30)

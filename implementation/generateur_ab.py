@@ -6,8 +6,8 @@ démarré le 2021.04.06
 """
 
 import random
-
-import labyrinthe
+import labyrinthe # abstract class pour communication avec solveurs
+# import generateur_ascii # super classe pour générateurs de labyrinthes (inclut labyrinthe)
 
 
 class Maze(labyrinthe.Labyrinthe):
@@ -20,43 +20,44 @@ class Maze(labyrinthe.Labyrinthe):
            . #  ...  #  ...
            R # # # # # <- last (ROWS_th) Room row (2*ROWS-1)
            W ### ##### <- last Wall row (2*ROWS) has entrance
-            there are a total of 2*cell rows + 1 grid rows
+            there are a total of (2*Room_rows + 1) rows
+            and (2*Room_cols + 1) cols
 
-        NB: matrix (whether np.array or list of lists) uses indices
+        NB: matrix uses indices
             in the order row, col, which correspond to [-]y, x!
     """
-    def __init__(self, rows, cols):
-        self.rows = rows
-        self.cols = cols
+    def __init__(self, room_rows, room_cols):
+        self.room_rows = room_rows
+        self.rows = 2* room_rows + 1
+        self.room_cols = room_cols
+        self.cols = 2 * room_cols + 1
         # self.grid = ""
-        # self.entrance = (0, 0)
-        # self.exit = (rows, cols)
+        self.start = (1, 1)
+        self.out = (self.rows-2, self.cols-2)
         self.fill_passable()
         self.generate()
     
     
-    def fill_str(self):
-        """ Sert à générer un grid ascii mais on va laisser tomber au profit du grid "passable"
-        """
-        self.grid = ""
-        for _ in range(self.rows):
-            self.grid += "#" * (2*self.cols+1) + "\n"
-            self.grid += "# " * self.cols + "#\n"
-        self.grid += "#" * (2*self.cols+1) + "\n"
-        return True
-            
-
     def fill_passable(self):
-        """ Génère une grid 'passable' qui contient des True là où c'est libre et des False là où il y a un obstacle (un mur)
+        """ Génère une grid 'passable' tout fermé:
+            contient des True là où c'est libre (rooms)
+            et des False partout ailleurs (là où il y a des murs)
+            
+            Exemple pour Grid avec 2x2 rooms:
+            #####
+            # # #
+            #####
+            # # #
+            #####
+            
+        
         """
-        # self.passable = [[False] * (self.cols*2+1), [False, True] * self.cols + [False]] * self.rows, [[False] * (self.cols*2+1)]
         self.passable = []
-        for row in range(rows):
-            self.passable += [[False] * (cols*2+1)]
-            self.passable += [[False, True] * (cols) + [False]]
-        self.passable += [[False] * (cols*2+1)]
-        # print(self.passable)
-        return True
+        for _ in range(self.rows):
+            self.passable += [[False] * (self.cols)]
+            self.passable += [[False, True] * (self.room_cols) + [False]]
+        self.passable += [[False] * (self.cols)]
+        # return True
             
 
     def carve(self, cell, direction):
@@ -72,7 +73,7 @@ class Maze(labyrinthe.Labyrinthe):
             self.passable[row][col-1] = True
         elif direction == (0, 1):  # right
             self.passable[row][col+1] = True
-        return True
+        # return True
 
     def generate(self):
         """ Aldous-Broder algorithm:
@@ -82,22 +83,22 @@ class Maze(labyrinthe.Labyrinthe):
         directions = {(-1, 0), (1, 0), (0, -1), (0, 1)}
         visited = set()  # visited cells
         # initial node is random
-        cell = (random.randrange(self.rows), random.randrange(self.cols))
-        while len(visited) < self.rows * self.cols:
+        cell = (random.randrange(self.room_rows), random.randrange(self.room_cols))
+        while len(visited) < self.room_rows * self.room_cols:
             visited.add(cell)
             # choose a direction for random walk from current
             next_exists = False
             while not next_exists:
                 direction = random.sample(directions, 1)[0]
                 nextcell = (cell[0]+direction[0], cell[1]+direction[1])
-                next_exists = (0 <= nextcell[0] < self.rows
-                               and 0 <= nextcell[1] < self.cols)
-            # if next is new, break a wall to get there
+                next_exists = (0 <= nextcell[0] < self.room_rows
+                               and 0 <= nextcell[1] < self.room_cols)
+            # if next is new, carve a wall to get there
             if nextcell not in visited:
                 self.carve(cell, direction)
-            # visit next
+            # walk
             cell = nextcell
-        return True
+        # return True
 
 
     def __str__(self):
@@ -105,19 +106,22 @@ class Maze(labyrinthe.Labyrinthe):
             avec des "#" pour les obstacles (murs) et des " " pour les cases ouvertes
         """
         grid = ""
-        for row in range(self.rows*2+1):
-            for col in range(self.cols*2+1):
+        for row in range(self.rows):
+            for col in range(self.cols):
                 grid += " " if self.passable[row][col] else "#"
-            grid += "\n"
+            if row < self.rows-1:
+                grid += "\n"
         return grid
+    
+    def __contains__(self, cell):
+        """ renvoie True si l'emplacement défini par les coordonnées "cell"
+            est vide (donc passable), False sinon (mur)
+        """
+        return self.passable[cell[0]][cell[1]]
 
 
 if __name__ == "__main__":
-    rows, cols = 5, 30
+    rows, cols = 10, 10
     
     GRILLE1 = Maze(rows,cols)
     print(GRILLE1)
-    
-    
-# Cette merde (ci-dessous) ne fonctionne pas et je ne sais pas pourquoi parce que je suis un gros nul
-# GRILLE1 = str(Maze(

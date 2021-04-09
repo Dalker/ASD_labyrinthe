@@ -9,7 +9,7 @@ Author: Dalker (daniel.kessler@dalker.org)
 Date: 2021-04-09
 """
 
-import abc  # abstract base methods
+import abc  # Abstract Base Class
 
 
 class Labyrinthe(abc.ABC):

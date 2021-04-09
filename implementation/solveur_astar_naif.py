@@ -21,7 +21,9 @@ import logging as log
 
 import matplotlib.pyplot as plt
 
-import generateur_ascii as gen
+# import generateur_ascii as gen
+
+import generateur_ab as ab
 
 
 class Foo:
@@ -187,23 +189,37 @@ def astar(grid, view=False):
 
 def test(maze, view=False):
     """Effectuer un test avec la grille donnée."""
-    print("Trying to find an A* path in grid:")
-    print(maze)
+    # print("Trying to find an A* path in grid:")
+    # print(maze)
     start_time = time.time()
     path = astar(maze, view)
     if path is not None:
         # grid.add_path(path)
-        print("A* solution found:")
-        print("\n".join([
+        print("A* solution found for Maze ", maze.rows, " x ", maze.cols)
+        path_str = "\n".join([
             "".join(["*" if (nrow, ncol) in path else val
                      for ncol, val in enumerate(row)])
-            for nrow, row in enumerate(str(maze).split("\n"))]))
+            for nrow, row in enumerate(str(maze).split("\n"))])
+        # print (path_str)
     else:
         print("No A* solution found.")
-    print("time elapsed : ", time.time() - start_time, "s")
+    elapsed = time.time() - start_time
+    # print("time elapsed : ", elapsed, "s")
+    return elapsed
 
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    print("* starting basic test *")
-    test(gen.MAZE30, view=False)
+    
+    time_ab = []
+    rows_cols = []
+    time_astar = []
+    for i in range(1, 11):
+        start_time = time.time()
+        maze = ab.Maze(10*i, 10*i)
+        time_ab.append(time.time() - start_time)
+        rows_cols.append(maze.rows)
+        time_astar.append(test(maze, view=False))
+    for rows, ab_time, astar_time in zip(rows_cols, time_ab, time_astar):
+        print(f"\nFor {rows}x{rows}: {ab_time}s for generate, {astar_time}s for solve")
+        
