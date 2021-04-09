@@ -23,15 +23,9 @@ import matplotlib.pyplot as plt
 import generateur_ascii as gen
 
 
-
 class Foo:
     def add_path(self, path):
         """Ajouter un chemin à la représentation ASCII de la grille."""
-        asciirows = self.ascii.split("\n")
-        self.ascii = "\n".join([
-            "".join(["*" if (row, col) in path else asciirows[row][col]
-                     for col in range(self.n_cols)])
-            for row in range(self.n_rows)])
 
 
 class Fringe():
@@ -195,10 +189,14 @@ def test(maze, view=False):
     print("Trying to find an A* path in grid:")
     print(maze)
     path = astar(maze, view)
+    print(path)
     if path is not None:
         # grid.add_path(path)
         print("A* solution found:")
-        print(maze)
+        print("".join([
+            "".join(["*" if (nrow, ncol) in path else val+f"({nrow},{ncol})"
+                     for ncol, val in enumerate(row)])
+            for nrow, row in enumerate(str(maze))]))
     else:
         print("No A* solution found.")
     print()
@@ -207,4 +205,4 @@ def test(maze, view=False):
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
     print("* starting basic test *")
-    test(gen.MAZE10, view=True)
+    test(gen.MAZE20, view=True)
