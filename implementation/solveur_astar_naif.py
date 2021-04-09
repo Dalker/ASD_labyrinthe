@@ -132,7 +132,7 @@ class AstarView():
             heuristic = self.fringe.cost[cell]
             self._matrix[row][col] = 16 - (8*heuristic) // maxdistance
             self._image.set_data(self._matrix)
-        plt.pause(0.00001)
+        plt.pause(0.000001)
 
     def showpath(self, path):
         """Montrer le chemin trouvé et laisser l'image visible."""
@@ -193,10 +193,10 @@ def test(maze, view=False):
     if path is not None:
         # grid.add_path(path)
         print("A* solution found:")
-        print("".join([
-            "".join(["*" if (nrow, ncol) in path else val+f"({nrow},{ncol})"
+        print("\n".join([
+            "".join(["*" if (nrow, ncol) in path else val
                      for ncol, val in enumerate(row)])
-            for nrow, row in enumerate(str(maze))]))
+            for nrow, row in enumerate(str(maze).split("\n"))]))
     else:
         print("No A* solution found.")
     print()
@@ -205,4 +205,4 @@ def test(maze, view=False):
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
     print("* starting basic test *")
-    test(gen.MAZE20, view=True)
+    test(gen.MAZE10, view=True)
