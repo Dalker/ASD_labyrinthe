@@ -189,7 +189,6 @@ def test(maze, view=False):
     print("Trying to find an A* path in grid:")
     print(maze)
     path = astar(maze, view)
-    print(path)
     if path is not None:
         # grid.add_path(path)
         print("A* solution found:")
