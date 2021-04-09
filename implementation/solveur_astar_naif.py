@@ -15,6 +15,7 @@ sinon.
 Author: Dalker (daniel.kessler@dalker.org)
 Start Date: 2021.04.06
 """
+import time
 
 import logging as log
 
@@ -113,7 +114,7 @@ class AstarView():
         self.fringe = fringe
         self.closed = closed
         _, self._axes = plt.subplots()
-        self.max_color = sum(abs(grid.start[j] - grid.out[j]) for j in (0, 1))
+        self.max_color = 2 * sum(abs(grid.start[j] - grid.out[j]) for j in (0, 1))
         self._matrix = [[16 if (row, col) in self.grid
                          else 0
                          for col in range(n_cols)]
@@ -188,6 +189,7 @@ def test(maze, view=False):
     """Effectuer un test avec la grille donnée."""
     print("Trying to find an A* path in grid:")
     print(maze)
+    start_time = time.time()
     path = astar(maze, view)
     if path is not None:
         # grid.add_path(path)
@@ -198,10 +200,10 @@ def test(maze, view=False):
             for nrow, row in enumerate(str(maze).split("\n"))]))
     else:
         print("No A* solution found.")
-    print()
+    print("time elapsed : ", time.time() - start_time, "s")
 
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
     print("* starting basic test *")
-    test(gen.MAZE10, view=True)
+    test(gen.MAZE30, view=False)

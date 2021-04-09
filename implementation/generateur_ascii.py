@@ -145,7 +145,7 @@ I           #   # #               #       #     #   #       #
 
 
 class LabyrintheAscii(labyrinthe.Labyrinthe):
-    """Labyrinthe définit à partir d'une "carte" ascii rectangulaire."""
+    """Labyrinthe défini à partir d'une "carte" ascii rectangulaire."""
 
     def __init__(self, asciimap):
         """
