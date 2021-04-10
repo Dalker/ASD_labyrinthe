@@ -1,3 +1,14 @@
+"""
+Tests expérimentaux de complexité algorithmique pour labyrinthes.
+
+L'augmentation du temps en fonction de la taille de la grille est observée
+pour un générateur et un solveur de labyrinthes.
+
+Authors: JCB (juan-carlos@barros.ch) et Dalker (daniel.kessler@dalker.org)
+Date: 2021-04-10
+"""
+
+
 import logging as log
 import time
 
@@ -20,6 +31,11 @@ def single_test(size, solver):
 
 
 def time_tests(max_size):
+    """
+    Effectuer des test avec des grilles aléatoires.
+
+    Ces tailles seront 10x10, 20x20, ..., max_size x max_size
+    """
     time_gen = []
     time_solve = []
     size = 10
@@ -32,5 +48,4 @@ def time_tests(max_size):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    time_tests(60)
-
+    time_tests(90)
