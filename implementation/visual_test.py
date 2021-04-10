@@ -7,6 +7,8 @@ Date: 2021-04-10
 
 import logging as log
 
+import matplotlib.pyplot as plt
+
 import generateur_ab as ab
 import solveur_astar_naif as astar_naif
 
@@ -30,8 +32,21 @@ if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
     print("* starting basic test *")
     # test(gen.MAZE10, view=True)
-    maze = ab.Maze(10, 10, .5)
+    maze = ab.Maze(20, 30, 0)
     d1 = astar_naif.distance1
     d2 = astar_naif.distance2
+    dj = astar_naif.dijsktra
+    fig = plt.figure()
+    ax1 = fig.add_subplot(2, 2, 1)
+    ax1.set_title("A* with Manhattan distance")
+    ax2 = fig.add_subplot(2, 2, 2)
+    ax2.set_title("A* with euclidean distance")
+    axj = fig.add_subplot(2, 2, 3)
+    axj.set_title("A* with 0 distance (= Dijkstra)")
     test(maze,
-         lambda mz: astar_naif.astar(mz, distance=d1, view=True))
+         lambda mz: astar_naif.astar(mz, distance=d1, view=ax1))
+    test(maze,
+         lambda mz: astar_naif.astar(mz, distance=d2, view=ax2))
+    test(maze,
+         lambda mz: astar_naif.astar(mz, distance=dj, view=axj))
+    plt.show()

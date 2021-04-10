@@ -91,4 +91,4 @@ def analyze(size, gent, solt):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    analyze(*time_tests(70, 0.2))
+    analyze(*time_tests(70, .05))
