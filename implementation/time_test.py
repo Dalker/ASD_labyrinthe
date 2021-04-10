@@ -55,13 +55,13 @@ def time_tests(max_size):
 
 
 def pente(x, y):
-    """Déterminer la pente de la droite de régression."""
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-    x_shifted = x - x_mean
-    y_shifted = y - y_mean
-    a = (x_shifted @ y_shifted) / (x_shifted @ x_shifted)
-    return a
+    """Déterminer la pente de la droite de régression par moindres carrés."""
+    # recentrer les données sur leur barycentre
+    x_shifted = x - np.mean(x)
+    y_shifted = y - np.mean(y)
+    # calculer la pente des moindres carrés
+    res = (x_shifted @ y_shifted) / (x_shifted @ x_shifted)
+    return res
 
 
 def analyze(size, gent, solt):
@@ -77,6 +77,8 @@ def analyze(size, gent, solt):
     axes_log.set_xlabel("log(taille)")
     axes_log.set_ylabel("log(durée)")
     axes_log.legend()
+    # la pente log/log est le degré d'une régression monômiale
+    # vu que y=cx^d <=> log(x) = d * log(x) + log(c)
     pente_gen = pente(np.log(size), np.log(gent))
     pente_sol = pente(np.log(size), np.log(solt))
     print("le générateur a une complexité expérimentale polynomiale de degré",
