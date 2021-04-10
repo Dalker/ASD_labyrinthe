@@ -21,6 +21,7 @@ import logging as log
 import matplotlib.pyplot as plt
 
 import generateur_ascii as gen
+import generateur_ab as ab
 
 
 class Foo:
@@ -208,4 +209,6 @@ def test(maze, view=False):
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
     print("* starting basic test *")
-    test(gen.MAZE10, view=True)
+    # test(gen.MAZE10, view=True)
+    test(ab.Maze(10, 10, .5), view=True)
+    

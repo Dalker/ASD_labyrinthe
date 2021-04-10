@@ -19,12 +19,12 @@ import generateur_ab as ab
 from solveur_astar_naif import astar
 
 
-def single_test(size, solver):
+def single_test(size, solver, ratio_wall_destr = 0):
     """Effectuer un test avec une grille aléatoire de la taille donnée."""
     log.debug("starting single test size %d" % size)
     start_time = time.time()
     log.debug("create maze")
-    maze = ab.Maze(size, size)
+    maze = ab.Maze(size, size, ratio_wall_destr)
     gen_duration = time.time() - start_time
     start_time = time.time()
     log.debug("solve maze")
@@ -33,7 +33,7 @@ def single_test(size, solver):
     return gen_duration, solve_duration
 
 
-def time_tests(max_size):
+def time_tests(max_size, ratio_wall_destr = 0):
     """
     Effectuer des test avec des grilles aléatoires.
 
@@ -44,10 +44,11 @@ def time_tests(max_size):
     soltimes = []
     size = 10
     while size <= max_size:
-        gentime, soltime = single_test(size, astar)
+        gentime, soltime = single_test(size, astar, ratio_wall_destr)
         sizes.append(size)
         gentimes.append(gentime)
         soltimes.append(soltime)
+        print(f"{ratio_wall_destr} = ratio of walls removed:", end = "")
         print(f"{size:4d}x{size:<4d}: {gentime:.4f}s for generate,",
               f"{soltime:.4f}s for solve")
         size += 10
@@ -90,4 +91,4 @@ def analyze(size, gent, solt):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    analyze(*time_tests(50))
+    analyze(*time_tests(100, 1))

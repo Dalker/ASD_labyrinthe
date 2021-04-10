@@ -25,8 +25,12 @@ class Maze(labyrinthe.Labyrinthe):
 
         NB: matrix uses indices
             in the order row, col, which correspond to [-]y, x!
+            
+        un paramètre destruction_murs permet d'enlever des murs après génération
+        avec une valeur de 0, aucun mur n'est enlevé après génération
+        avec une valeur de 1, tous les murs sont enlevés: seuls restent les murs extérieurs
     """
-    def __init__(self, room_rows, room_cols):
+    def __init__(self, room_rows, room_cols, destruction_murs = 0):
         self.room_rows = room_rows
         self.rows = 2* room_rows + 1
         self.room_cols = room_cols
@@ -36,6 +40,8 @@ class Maze(labyrinthe.Labyrinthe):
         self.out = (self.rows-2, self.cols-2)
         self.fill_passable()
         self.generate()
+        self.destruction_murs = destruction_murs # ratio des murs qu'on détruit
+        self.destr_murs()
     
     
     def fill_passable(self):
@@ -44,6 +50,8 @@ class Maze(labyrinthe.Labyrinthe):
             et des False partout ailleurs (là où il y a des murs)
             
             Exemple pour Grid avec 2x2 rooms:
+            ("#" = False = mur / " " = True = passage libre)
+            
             #####
             # # #
             #####
@@ -100,6 +108,19 @@ class Maze(labyrinthe.Labyrinthe):
             cell = nextcell
         # return True
 
+    def destr_murs(self):
+        wall_cells = []
+        for row in range (1, self.rows-1):
+            for col in range (1, self.cols-1):
+                if not self.passable[row][col]:
+                    wall_cells += [(row, col)]
+        walls_abs_destr = int(self.destruction_murs * len(wall_cells))
+        if walls_abs_destr>0:
+            for i in range(walls_abs_destr):
+                sentence = random.randrange(len(wall_cells))
+                self.passable[wall_cells[sentence][0]][wall_cells[sentence][1]] = True
+                wall_cells.pop(sentence)
+        
 
     def __str__(self):
         """ sort un string qui représente grossièrement notre labyrinthe
@@ -121,7 +142,8 @@ class Maze(labyrinthe.Labyrinthe):
 
 
 if __name__ == "__main__":
-    rows, cols = 10, 10
-    
-    GRILLE1 = Maze(rows,cols)
-    print(GRILLE1)
+    rows, cols = 5, 20
+    for i in range(3):
+        ratio = i * .5
+        GRILLE = Maze(rows,cols, ratio)
+        print(GRILLE)
