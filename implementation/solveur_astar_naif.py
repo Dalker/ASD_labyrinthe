@@ -15,18 +15,10 @@ sinon.
 Author: Dalker (daniel.kessler@dalker.org)
 Start Date: 2021.04.06
 """
-import time
+
 import logging as log
 
 import matplotlib.pyplot as plt
-
-import generateur_ascii as gen
-import generateur_ab as ab
-
-
-class Foo:
-    def add_path(self, path):
-        """Ajouter un chemin à la représentation ASCII de la grille."""
 
 
 class Fringe():
@@ -114,8 +106,6 @@ class AstarView():
         self.fringe = fringe
         self.closed = closed
         _, self._axes = plt.subplots()
-        # self.max_color = (2 * sum(abs(grid.start[j] - grid.out[j])
-        #                           for j in (0, 1)))
         self._matrix = [[4 if (row, col) in self.grid
                          else 0
                          for col in range(n_cols)]
@@ -127,14 +117,11 @@ class AstarView():
 
     def update(self):
         """Update and display the view of the Maze."""
-        # maxdistance = max(self.fringe.cost[cell]
-        #                   for cell in self.fringe.heuristic) + 1
         for row, col in self.closed:
             self._matrix[row][col] = 2
         for cell in self.fringe.heuristic:
             row, col = cell
-            # heuristic = self.fringe.cost[cell]
-            self._matrix[row][col] = 3  # 16 - (8*heuristic) // maxdistance
+            self._matrix[row][col] = 3
         self._image.set_data(self._matrix)
         plt.pause(0.000001)
 
@@ -147,7 +134,17 @@ class AstarView():
         plt.show()
 
 
-def astar(grid, view=False):
+def distance1(cell1, cell2):
+    """Return Manhattan distance between cells."""
+    return abs(cell1[0] - cell2[0]) + abs(cell1[1] - cell2[1])
+
+
+def distance2(cell1, cell2):
+    """Return euclidean distance between cells."""
+    return ((cell1[0] - cell2[0])**2 + (cell1[1] - cell2[1])**2)**0.5
+
+
+def astar(grid, distance=distance1, view=False):
     """
     Trouver un chemin optimal dans une grille par algorithme A*.
 
@@ -179,36 +176,12 @@ def astar(grid, view=False):
             neighbour = tuple(current[j] + direction[j] for j in (0, 1))
             if neighbour not in grid or neighbour in closed:
                 continue
-            distance = sum(abs(neighbour[j] - grid.out[j]) for j in (0, 1))
-            fringe.append(neighbour, cost, cost+distance, predecessor=current)
+            fringe.append(neighbour,
+                          cost,
+                          cost + distance(neighbour, grid.out),
+                          predecessor=current)
             if view:
                 astar_view.update()
         closed[current] = predecessor
         if view:
             astar_view.update()
-
-
-def test(maze, view=False):
-    """Effectuer un test avec la grille donnée."""
-    print("Trying to find an A* path in grid:")
-    log.debug("initial maze:\n%s", maze)
-    start_time = time.time()
-    path = astar(maze, view)
-    if path is not None:
-        # grid.add_path(path)
-        print("A* solution found:")
-        print("\n".join([
-            "".join(["*" if (nrow, ncol) in path else val
-                     for ncol, val in enumerate(row)])
-            for nrow, row in enumerate(str(maze).split("\n"))]))
-    else:
-        print("No A* solution found.")
-    print("time elapsed : ", time.time() - start_time, "s")
-
-
-if __name__ == "__main__":
-    log.basicConfig(level=log.INFO)
-    print("* starting basic test *")
-    # test(gen.MAZE10, view=True)
-    test(ab.Maze(10, 10, .5), view=True)
-    
