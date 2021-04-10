@@ -171,14 +171,17 @@ def astar(grid, distance=distance1, view=False):
             if view:
                 astar_view.showpath(path)
             return path
-        cost += 1
-        for direction in ((0, 1), (0, -1), (-1, 0), (1, 0)):
+        for direction in ((0, 1, 1), (0, -1, 1), (-1, 0, 1), (1, 0, 1),
+                          (1, 1, 1.4), (1, -1, 1.4),
+                          (-1, 1, 1.4), (-1, -1, 1.4)):
             neighbour = tuple(current[j] + direction[j] for j in (0, 1))
             if neighbour not in grid or neighbour in closed:
                 continue
+            neighbour_cost = cost + direction[2]
+            heuristic = neighbour_cost + distance(neighbour, grid.out),
             fringe.append(neighbour,
-                          cost,
-                          cost + distance(neighbour, grid.out),
+                          neighbour_cost,
+                          heuristic,
                           predecessor=current)
             if view:
                 astar_view.update()
