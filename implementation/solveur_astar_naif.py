@@ -16,14 +16,11 @@ Author: Dalker (daniel.kessler@dalker.org)
 Start Date: 2021.04.06
 """
 import time
-
 import logging as log
 
 import matplotlib.pyplot as plt
 
-# import generateur_ascii as gen
-
-import generateur_ab as ab
+import generateur_ascii as gen
 
 
 class Foo:
@@ -116,8 +113,9 @@ class AstarView():
         self.fringe = fringe
         self.closed = closed
         _, self._axes = plt.subplots()
-        self.max_color = 2 * sum(abs(grid.start[j] - grid.out[j]) for j in (0, 1))
-        self._matrix = [[16 if (row, col) in self.grid
+        # self.max_color = (2 * sum(abs(grid.start[j] - grid.out[j])
+        #                           for j in (0, 1)))
+        self._matrix = [[4 if (row, col) in self.grid
                          else 0
                          for col in range(n_cols)]
                         for row in range(n_rows)]
@@ -128,19 +126,21 @@ class AstarView():
 
     def update(self):
         """Update and display the view of the Maze."""
-        maxdistance = max(self.fringe.cost[cell]
-                          for cell in self.fringe.heuristic) + 1
+        # maxdistance = max(self.fringe.cost[cell]
+        #                   for cell in self.fringe.heuristic) + 1
+        for row, col in self.closed:
+            self._matrix[row][col] = 2
         for cell in self.fringe.heuristic:
             row, col = cell
-            heuristic = self.fringe.cost[cell]
-            self._matrix[row][col] = 16 - (8*heuristic) // maxdistance
-            self._image.set_data(self._matrix)
+            # heuristic = self.fringe.cost[cell]
+            self._matrix[row][col] = 3  # 16 - (8*heuristic) // maxdistance
+        self._image.set_data(self._matrix)
         plt.pause(0.000001)
 
     def showpath(self, path):
         """Montrer le chemin trouvé et laisser l'image visible."""
         for row, col in path:
-            self._matrix[row][col] = 2
+            self._matrix[row][col] = 1
             self._image.set_data(self._matrix)
             plt.pause(0.00001)
         plt.show()
@@ -189,37 +189,23 @@ def astar(grid, view=False):
 
 def test(maze, view=False):
     """Effectuer un test avec la grille donnée."""
-    # print("Trying to find an A* path in grid:")
-    # print(maze)
+    print("Trying to find an A* path in grid:")
+    log.debug("initial maze:\n%s", maze)
     start_time = time.time()
     path = astar(maze, view)
     if path is not None:
         # grid.add_path(path)
-        print("A* solution found for Maze ", maze.rows, " x ", maze.cols)
-        path_str = "\n".join([
+        print("A* solution found:")
+        print("\n".join([
             "".join(["*" if (nrow, ncol) in path else val
                      for ncol, val in enumerate(row)])
-            for nrow, row in enumerate(str(maze).split("\n"))])
-        # print (path_str)
+            for nrow, row in enumerate(str(maze).split("\n"))]))
     else:
         print("No A* solution found.")
-    elapsed = time.time() - start_time
-    # print("time elapsed : ", elapsed, "s")
-    return elapsed
+    print("time elapsed : ", time.time() - start_time, "s")
 
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    
-    time_ab = []
-    rows_cols = []
-    time_astar = []
-    for i in range(1, 11):
-        start_time = time.time()
-        maze = ab.Maze(10*i, 10*i)
-        time_ab.append(time.time() - start_time)
-        rows_cols.append(maze.rows)
-        time_astar.append(test(maze, view=False))
-    for rows, ab_time, astar_time in zip(rows_cols, time_ab, time_astar):
-        print(f"\nFor {rows}x{rows}: {ab_time}s for generate, {astar_time}s for solve")
-        
+    print("* starting basic test *")
+    test(gen.MAZE10, view=True)
