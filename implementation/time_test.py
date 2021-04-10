@@ -12,6 +12,8 @@ Date: 2021-04-10
 import logging as log
 import time
 
+import matplotlib.pyplot as plt
+
 import generateur_ab as ab
 from solveur_astar_naif import astar
 
@@ -36,16 +38,30 @@ def time_tests(max_size):
 
     Ces tailles seront 10x10, 20x20, ..., max_size x max_size
     """
-    time_gen = []
-    time_solve = []
+    sizes = []
+    gentimes = []
+    soltimes = []
     size = 10
     while size <= max_size:
-        time_gen, time_solve = single_test(size, astar)
-        print(f"{size:4d}x{size:<4d}: {time_gen:.4f}s for generate,",
-              f"{time_solve:.4f}s for solve")
+        gentime, soltime = single_test(size, astar)
+        sizes.append(size)
+        gentimes.append(gentime)
+        soltimes.append(soltime)
+        print(f"{size:4d}x{size:<4d}: {gentime:.4f}s for generate,",
+              f"{soltime:.4f}s for solve")
         size += 10
+    return sizes, gentimes, soltimes
+
+
+def analyze(size, gent, solt):
+    """Analyzer complexité expérimentale de génération/résolution."""
+    _, axes = plt.subplots()
+    axes.plot(size, gent, "+b", label="generate")
+    axes.plot(size, solt, "+g", label="solve")
+    axes.legend()
+    plt.show()
 
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    time_tests(90)
+    analyze(*time_tests(50))
