@@ -1,0 +1,49 @@
+#+TITLE: Algorithme A* (pseudo-code)
+#+AUTHOR: Dalker (daniel.kessler@dalker.org)
+
+* Algorithme A* pour déterminer meilleur chemin dans grille rectangulaire
+On s'intéresse au cas d'un "labyrinthe" présenté sous forme de grille
+rectangulaire, avec possibilité de déplacement haut/bas/gauche/droite avec coût
+égal pour chaque déplacement.
+
+** Entrée:
+- grille rectangulaire en lecture seule (permet de déterminer si une cellule est accessible)
+- coordonnées de la cellule de départ
+- coordonnées de la cellule d'arrivée
+
+** Structures de donnée
+- *liste* de cellules déjà traitées, vide au départ, puis contenant des cellules
+  décrites par leurs *coordonnées* et celles de son *prédecesseur* 
+- *queue prioritaire* de cellules à traiter, contenant la cellule de départ
+  - la *priorité* est le *coût heuristique*, prédiction du coût total d'un
+    chemin complet passant par cette cellule (la priorité est donnée à la
+    cellule de coût minimal)
+  - la *cellule* est stockée dans la queue avec ses coordonnées, le *coût
+    réel* pour y accéder et son *prédecesseur*
+
+** Algorithme
+Tant que la queue prioritaire n'est pas vide,
+- extraire (pop) la cellule prioritaire de la queue
+- si la cellule est la cellule d'arrivée, retourner le chemin qui y amène
+  (backtracking sur la liste de cellules déjà traitées)
+- sinon:
+  - ajouter à la queue prioritaire chaque voisin admissible de la cellule (un
+    voisin est admissible s'il est dans la grille mais pas dans la liste de
+    cellules déjà traitées)
+  - ajouter à la liste des cellules traitées la cellule actuelle
+
+** Propriétés démontrables
+- S'il existe des chemins menant du départ à l'arrivée, l'algorithme A* aboutit
+- Si l'heuristique est *admissible* (càd si elle utilise une distance prouvée
+  inférieure ou égale à la distance réelle de tout chemin réel possible), le
+  résultat de A* est un chemin de coût minimal
+- Avec une heuristique qui estime à 0 la distance restante depuis une cellule
+  jusqu'à l'arrivée, A* est équivalent à l'algorithme de Dijkstra (qui n'utilise
+  que la distance déjà connue depuis le départ jusqu'à la cellule pour établir
+  la priorité)
+
+** Références
+- https://fr.wikipedia.org/wiki/Algorithme_A*
+- https://en.wikipedia.org/wiki/A*_search_algorithm
+- https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+  (et pages liées)
