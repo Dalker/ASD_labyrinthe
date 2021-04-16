@@ -16,7 +16,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import generateur_ab as ab
-from solveur_astar_naif import astar
+from solveur_astar_naif import astar as astar_naif
+from solveur_astar_heapq import astar as astar_heapq
 
 
 def single_test(size, solver, ratio_wall_destr=0):
@@ -33,7 +34,7 @@ def single_test(size, solver, ratio_wall_destr=0):
     return gen_duration, solve_duration
 
 
-def time_tests(max_size, ratio_wall_destr=0):
+def time_tests(name, solver, max_size, ratio_wall_destr=0):
     """
     Effectuer des test avec des grilles aléatoires.
 
@@ -43,12 +44,12 @@ def time_tests(max_size, ratio_wall_destr=0):
     gentimes = []
     soltimes = []
     size = 10
+    print(f"Starting {name} test with {ratio_wall_destr} wall remove ratio.")
     while size <= max_size:
-        gentime, soltime = single_test(size, astar, ratio_wall_destr)
+        gentime, soltime = single_test(size, solver, ratio_wall_destr)
         sizes.append(size)
         gentimes.append(gentime)
         soltimes.append(soltime)
-        print(f"{ratio_wall_destr} = ratio of walls removed:", end="")
         print(f"{size:4d}x{size:<4d}: {gentime:.4f}s for generate,",
               f"{soltime:.4f}s for solve")
         size += 10
@@ -91,4 +92,5 @@ def analyze(size, gent, solt):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    analyze(*time_tests(70, .05))
+    analyze(*time_tests("A* naïf", astar_naif, 70, .05))
+    analyze(*time_tests("A* with heapq", astar_heapq, 70, .05))

@@ -32,7 +32,7 @@ if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
     print("* starting basic test *")
     # test(gen.MAZE10, view=True)
-    maze = ab.Maze(20, 30, 0)
+    maze = ab.Maze(30, 40, 0.1)
     d1 = astar_naif.distance1
     d2 = astar_naif.distance2
     dj = astar_naif.dijsktra
