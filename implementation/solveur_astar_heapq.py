@@ -21,8 +21,8 @@ def astar(grid):
     (row, col) in grid, retournant vrai si la cellule peut être traversée.
 
     Structures de donnée de travail:
-    - closed: association des cellules déjà traversées à leurs parents
-    - fringe: heapq des cellules à traiter, priorisées par coût heuristique
+    - closed: association des cellules déjà traversées à leur meilleur parent
+    - fringe: heapq des cellules à traiter, priorisées par coût total (heuristique)
       cellule = tuple (heuristique, n_entree, cost, current, parent)
       - heuristique est le coût estimé d'un chemin passant par la cellule
         depuis le parent indiqué
@@ -54,6 +54,13 @@ def astar(grid):
                 continue
             if (newrow, newcol) in closed:
                 continue
+
+#      peut-être plus compréhensible pour un non erudit Python:
+#            if (newrow, newcol) in row:
+#                if (newrow, newcol) not in closed:
+#                     blabla
+#      ? Parce qu'il faut comprendre que le "continue" skip tout le reste de l'itération for, c'est ça?
+
             n_fringe += 1
             heuristic = abs(outrow - newrow) + abs(outcol - newcol)
             newcell = (newrow, newcol)
