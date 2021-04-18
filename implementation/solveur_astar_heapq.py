@@ -3,8 +3,8 @@ Solveur A* pour labyrinthe sur grille rectangulaire.
 
 Cette version utilise heapq pour la queue prioritaire.
 
-Author: Dalker (daniel.kessler@dalker.org)
-Date: 2021-04-16
+Author: Dalker
+Date: 2021.04.16
 """
 
 import heapq
@@ -22,7 +22,7 @@ def astar(grid):
 
     Structures de donnée de travail:
     - closed: association des cellules déjà traversées à leur meilleur parent
-    - fringe: heapq des cellules à traiter, priorisées par coût total (heuristique)
+    - fringe: heapq des cellules à traiter, priorisées par coût total heuristique
       cellule = tuple (heuristique, n_entree, cost, current, parent)
       - heuristique est le coût estimé d'un chemin passant par la cellule
         depuis le parent indiqué
@@ -51,16 +51,9 @@ def astar(grid):
         for prow, pcol in DIRECTIONS:
             newrow, newcol = row + prow, col + pcol
             if (newrow, newcol) not in grid:
-                continue
+                continue  # mouvement pas possible: passer au suivant
             if (newrow, newcol) in closed:
-                continue
-
-#      peut-être plus compréhensible pour un non erudit Python:
-#            if (newrow, newcol) in row:
-#                if (newrow, newcol) not in closed:
-#                     blabla
-#      ? Parce qu'il faut comprendre que le "continue" skip tout le reste de l'itération for, c'est ça?
-
+                continue  # cellule déjà traitée: passer au suivant
             n_fringe += 1
             heuristic = abs(outrow - newrow) + abs(outcol - newcol)
             newcell = (newrow, newcol)
