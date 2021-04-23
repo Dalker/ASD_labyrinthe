@@ -103,7 +103,7 @@ if __name__ == "__main__":
     # from generateur_ascii import MAZE30 as maze
     from generateur_ab import Maze
     from pstats import SortKey
-    maze = Maze(50, 60, 0.05)
+    maze = Maze(50, 60, 0.01)
     print(maze)
     # print(list(astar(MAZE10, distance=distance1)))
     cProfile.run("astar(maze, distance=distance0)", sort=SortKey.TIME)
