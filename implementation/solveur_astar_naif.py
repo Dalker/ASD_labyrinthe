@@ -17,8 +17,7 @@ Start Date: 2021.04.06
 """
 
 import logging as log
-
-import matplotlib.pyplot as plt
+from viewer import AstarView
 
 
 class Fringe():
@@ -85,63 +84,6 @@ class Fringe():
         return least, self._predecessor[least], self.cost[least]
 
 
-class AstarView():
-    """
-    Visualisation de l'avancée de l'algorithme A*.
-
-    Attributs:
-    - axes: matplotlib Axes
-    - grid: Grid
-    - fringe: Fringe
-    - closed: list
-    Tous trois sont des références aux objects manipulés en cours d'algorithme.
-    Les modifications sont donc visibles automatiquement.
-    """
-
-    def __init__(self, grid, fringe, closed, axes=None):
-        """Initialiser la vue."""
-        if axes is None:
-            _, self.axes = plt.subplots()
-        else:
-            self.axes = axes
-        self.grid = grid
-        lignes = str(grid).split("\n")
-        n_rows = len(lignes)
-        n_cols = max(len(ligne) for ligne in lignes)
-        self.update_freq = min(n_rows, n_cols)
-        self.update_next = 1
-        self.fringe = fringe
-        self.closed = closed
-        self._matrix = [[4 if (row, col) in self.grid
-                         else 0
-                         for col in range(n_cols)]
-                        for row in range(n_rows)]
-        self._image = self.axes.matshow(self._matrix,
-                                        cmap=plt.get_cmap("plasma"))
-        self.axes.set_axis_off()
-        self.update()
-
-    def update(self):
-        """Update and display the view of the Maze."""
-        self.update_next -= 1
-        if self.update_next == 0:
-            self.update_next = self.update_freq
-            for row, col in self.closed:
-                self._matrix[row][col] = 2
-            for cell in self.fringe.heuristic:
-                row, col = cell
-                self._matrix[row][col] = 3
-            self._image.set_data(self._matrix)
-            plt.pause(0.000001)
-
-    def showpath(self, path):
-        """Montrer le chemin trouvé et laisser l'image visible."""
-        for row, col in path:
-            self._matrix[row][col] = 1
-            self._image.set_data(self._matrix)
-        plt.pause(0.00001)
-
-
 def distance0(cell1, cell2):
     """Return 0 distance for A* to behave like Dijkstra's algorithm."""
     return 0
@@ -170,8 +112,7 @@ def astar(grid, distance=distance1, view=None, diagonals=False):
     closed = dict()  # associations cellule_traitée -> prédecesseur
     fringe = Fringe(grid.start)  # file d'attente de cellules à traiter
     if view is not None:
-        axes = view if isinstance(view, plt.Axes) else None
-        astar_view = AstarView(grid, fringe, closed, axes=axes)
+        astar_view = AstarView(grid, fringe.heuristic, closed, view)
     while True:
         current, predecessor, cost = fringe.pop()
         if current is None:
@@ -193,13 +134,11 @@ def astar(grid, distance=distance1, view=None, diagonals=False):
             if neighbour not in grid or neighbour in closed:
                 continue
             neighbour_cost = cost + direction[2]
-            heuristic = neighbour_cost + distance(neighbour, grid.out),
+            heuristic = neighbour_cost + distance(neighbour, grid.out)
             fringe.append(neighbour,
                           neighbour_cost,
                           heuristic,
                           predecessor=current)
-            if view is not None:
-                astar_view.update()
         closed[current] = predecessor
         if view is not None:
             astar_view.update()

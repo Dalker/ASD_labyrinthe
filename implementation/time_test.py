@@ -57,13 +57,16 @@ def time_tests(solver, max_size, solver2=None, rwd=0):
         gentime, *soltime = single_test(size, solver, solver2=solver2,
                                         ratio_wall_destr=rwd)
         sizes.append(size)
+        log.debug("generating grid with size %d and rwd %f", size, rwd)
         gentimes.append(gentime)
+        log.debug("solving 1")
         soltimes.append(soltime[0])
         if solver2 is not None:
+            log.debug("solving 2")
             soltimes2.append(soltime[1])
             print(f"{size:4d}x{size:<4d}: generate={gentime:.4f}s",
                   f"solve1={soltime[0]:.4f}s",
-                  f"solve2={soltime[1]:.4f}s for solve2")
+                  f"solve2={soltime[1]:.4f}s")
         else:
             print(f"{size:4d}x{size:<4d}: generate={gentime:.4f}s",
                   f"solve={soltime[0]:.4f}s")
@@ -122,13 +125,13 @@ if __name__ == "__main__":
     # analyze(*time_tests(astar_heapq, 70, rwd=.05))
     print("* Comparaison des algorithmes Dijkstra vs. A* avec Manhattan distance *")
     print("Algo1 = A* avec distance nulle = Dijkstra's, Algo2 = A* avec Manhattan, SD = heapq")
-    sz, gent, solt, solt2 = time_tests(dijkstra, 100, solver2=astar_heapq,
-                                       rwd=.2)
-    print("analyzing results with A* with dict vs. heapq")
+    sz, gent, solt, solt2 = time_tests(dijkstra, 80, solver2=astar_heapq,
+                                       rwd=.05)
+    print("analyzing results with Dijkstra vs. Manhattan distance A* (both with heapq)")
     analyze(sz, gent, solt, solt2=solt2, view=False)
     print("* Comparaison de l'effet de la structure de donnée *")
     print("Algo = A*, SD1 = dict, SD2 = heapq")
-    sz, gent, solt, solt2 = time_tests(astar_naif, 100, solver2=astar_heapq,
+    sz, gent, solt, solt2 = time_tests(astar_naif, 80, solver2=astar_heapq,
                                        rwd=.05)
     print("analyzing results with A* with dict vs. heapq")
     analyze(sz, gent, solt, solt2=solt2, view=False)

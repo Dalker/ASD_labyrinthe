@@ -9,6 +9,8 @@ Date: 2021.04.16
 
 import heapq
 
+from viewer import AstarView
+
 DIRECTIONS = ((1, 0), (-1, 0), (0, 1), (0, -1))
 
 
@@ -27,7 +29,7 @@ def distance0(x1, y1, x2, y2):
     return 0
 
 
-def astar(grid, distance=distance1):
+def astar(grid, distance=distance1, view=None):
     """
     Trouver le plus court chemin vers la sortie.
 
@@ -45,6 +47,8 @@ def astar(grid, distance=distance1):
         assure une priorité unique sans lire le reste du tuple.
       - cost est le coût réel pour arriver à current depuis start via parent
       - current et parent sont des tuples (ligne, colonne)
+    - distance: distance function to use for heuristics
+    - view: Viewer to initialize with access to fringe and closed and call for updates
     """
 
     outrow, outcol = grid.out
@@ -53,14 +57,21 @@ def astar(grid, distance=distance1):
     heapq.heapify(fringe)
     closed = {grid.start: None}
 
+    if view is not None:
+        astar_view = AstarView(grid, fringe, closed, view)
+
     while fringe != []:
         _, _,  cost, cell, parent = heapq.heappop(fringe)
+        if view is not None:
+            astar_view.update()
         if cell == grid.out:
             backtrack = [cell]
             cell = parent
             while cell is not None:
                 backtrack.append(cell)
                 cell = closed[cell]
+            if view is not None:
+                astar_view.showpath(backtrack)
             return reversed(backtrack)
         row, col = cell
         for prow, pcol in DIRECTIONS:
@@ -71,10 +82,10 @@ def astar(grid, distance=distance1):
                 continue  # cellule déjà traitée: passer au suivant
             n_fringe += 1
             # heuristic = abs(outrow - newrow) + abs(outcol - newcol)
-            heuristic = distance1(outrow, outcol, newrow, newcol)
+            heuristic = distance(outrow, outcol, newrow, newcol)
             newcell = (newrow, newcol)
             heapq.heappush(fringe,
-                           (heuristic, n_fringe, cost+1, newcell, cell))
+                           (cost+heuristic, n_fringe, cost+1, newcell, cell))
         closed[cell] = parent
 
     print("Astar: Failed to find a solution.")
@@ -88,5 +99,13 @@ def dijkstra(grid):
 
 if __name__ == "__main__":
     # test minimal
-    from generateur_ascii import MAZE10
-    print(list(astar(MAZE10)))
+    import cProfile
+    # from generateur_ascii import MAZE30 as maze
+    from generateur_ab import Maze
+    from pstats import SortKey
+    maze = Maze(40, 50, 0.05)
+    print(maze)
+    # print(list(astar(MAZE10, distance=distance1)))
+    cProfile.run("astar(maze, distance=distance0)", sort=SortKey.TIME)
+    cProfile.run("astar(maze, distance=distance1)", sort=SortKey.TIME)
+    cProfile.run("astar(maze, distance=distance2)", sort=SortKey.TIME)
