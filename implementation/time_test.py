@@ -122,16 +122,18 @@ def analyze(size, gent, solt, solt2=None, view=True):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
+    msz = 70  # max_size
+    rwd = 0.01  # rate of wall destruction
     # analyze(*time_tests(astar_heapq, 70, rwd=.05))
     print("* Comparaison des algorithmes Dijkstra vs. A* avec Manhattan distance *")
     print("Algo1 = A* avec distance nulle = Dijkstra's, Algo2 = A* avec Manhattan, SD = heapq")
-    sz, gent, solt, solt2 = time_tests(dijkstra, 80, solver2=astar_heapq,
-                                       rwd=.05)
+    sz, gent, solt, solt2 = time_tests(dijkstra, msz, solver2=astar_heapq,
+                                       rwd=rwd)
     print("analyzing results with Dijkstra vs. Manhattan distance A* (both with heapq)")
     analyze(sz, gent, solt, solt2=solt2, view=False)
     print("* Comparaison de l'effet de la structure de donnée *")
     print("Algo = A*, SD1 = dict, SD2 = heapq")
-    sz, gent, solt, solt2 = time_tests(astar_naif, 80, solver2=astar_heapq,
-                                       rwd=.05)
+    sz, gent, solt, solt2 = time_tests(astar_naif, msz, solver2=astar_heapq,
+                                       rwd=rwd)
     print("analyzing results with A* with dict vs. heapq")
     analyze(sz, gent, solt, solt2=solt2, view=False)

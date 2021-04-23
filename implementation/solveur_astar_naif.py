@@ -142,3 +142,17 @@ def astar(grid, distance=distance1, view=None, diagonals=False):
         closed[current] = predecessor
         if view is not None:
             astar_view.update()
+
+
+if __name__ == "__main__":
+    # test minimal
+    import cProfile
+    # from generateur_ascii import MAZE30 as maze
+    from generateur_ab import Maze
+    from pstats import SortKey
+    maze = Maze(50, 60, 0.05)
+    print(maze)
+    # print(list(astar(MAZE10, distance=distance1)))
+    cProfile.run("astar(maze, distance=distance0)", sort=SortKey.TIME)
+    cProfile.run("astar(maze, distance=distance1)", sort=SortKey.TIME)
+    cProfile.run("astar(maze, distance=distance2)", sort=SortKey.TIME)
