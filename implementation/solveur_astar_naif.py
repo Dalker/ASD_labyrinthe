@@ -142,7 +142,7 @@ class AstarView():
         plt.pause(0.00001)
 
 
-def dijsktra(cell1, cell2):
+def distance0(cell1, cell2):
     """Return 0 distance for A* to behave like Dijkstra's algorithm."""
     return 0
 

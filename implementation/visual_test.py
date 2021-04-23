@@ -10,7 +10,7 @@ import logging as log
 import matplotlib.pyplot as plt
 
 import generateur_ab as ab
-import solveur_astar_naif as astar_naif
+import solveur_astar_naif as astar
 
 
 def test(maze, solver):
@@ -33,9 +33,9 @@ if __name__ == "__main__":
     print("* starting basic test *")
     # test(gen.MAZE10, view=True)
     maze = ab.Maze(30, 40, 0.1)
-    d1 = astar_naif.distance1
-    d2 = astar_naif.distance2
-    dj = astar_naif.dijsktra
+    d1 = astar.distance1
+    d2 = astar.distance2
+    dj = astar.distance0
     fig = plt.figure()
     ax1 = fig.add_subplot(2, 2, 1)
     ax1.set_title("A* with Manhattan distance")
@@ -44,9 +44,9 @@ if __name__ == "__main__":
     axj = fig.add_subplot(2, 2, 3)
     axj.set_title("A* with 0 distance (= Dijkstra)")
     test(maze,
-         lambda mz: astar_naif.astar(mz, distance=d1, view=ax1))
+         lambda mz: astar.astar(mz, distance=d1, view=ax1))
     test(maze,
-         lambda mz: astar_naif.astar(mz, distance=d2, view=ax2))
+         lambda mz: astar.astar(mz, distance=d2, view=ax2))
     test(maze,
-         lambda mz: astar_naif.astar(mz, distance=dj, view=axj))
+         lambda mz: astar.astar(mz, distance=dj, view=axj))
     plt.show()

@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import generateur_ab as ab
 from solveur_astar_naif import astar as astar_naif
 from solveur_astar_heapq import astar as astar_heapq
+from solveur_astar_heapq import dijkstra
 
 
 def single_test(size, solver, solver2=None, ratio_wall_destr=0):
@@ -118,10 +119,16 @@ def analyze(size, gent, solt, solt2=None, view=True):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
+    # analyze(*time_tests(astar_heapq, 70, rwd=.05))
+    print("* Comparaison des algorithmes Dijkstra vs. A* avec Manhattan distance *")
+    print("Algo1 = A* avec distance nulle = Dijkstra's, Algo2 = A* avec Manhattan, SD = heapq")
+    sz, gent, solt, solt2 = time_tests(dijkstra, 100, solver2=astar_heapq,
+                                       rwd=.2)
+    print("analyzing results with A* with dict vs. heapq")
+    analyze(sz, gent, solt, solt2=solt2, view=False)
     print("* Comparaison de l'effet de la structure de donnée *")
     print("Algo = A*, SD1 = dict, SD2 = heapq")
-    sz, gent, solt, solt2 = time_tests(astar_naif, 70, solver2=astar_heapq,
+    sz, gent, solt, solt2 = time_tests(astar_naif, 100, solver2=astar_heapq,
                                        rwd=.05)
     print("analyzing results with A* with dict vs. heapq")
-    analyze(sz, gent, solt, solt2=solt2)  # , view=False)
-    # analyze(*time_tests(astar_heapq, 70, rwd=.05))
+    analyze(sz, gent, solt, solt2=solt2, view=False)

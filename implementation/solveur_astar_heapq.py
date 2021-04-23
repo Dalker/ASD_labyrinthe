@@ -12,7 +12,22 @@ import heapq
 DIRECTIONS = ((1, 0), (-1, 0), (0, 1), (0, -1))
 
 
-def astar(grid):
+def distance1(x1, y1, x2, y2):
+    """Retourner la "Manhattan distance" entre (x1, y1) et (x2, y2)."""
+    return abs(x1 - x2) + abs(y1 - y2)
+
+
+def distance2(x1, y1, x2, y2):
+    """Retourner la distance euclidienne entre (x1, y1) et (x2, y2)."""
+    return ((x1-x2)**2 + (y1-y2)**2)**0.5
+
+
+def distance0(x1, y1, x2, y2):
+    """Retourner 0 (transforme A* en Dijkstra)."""
+    return 0
+
+
+def astar(grid, distance=distance1):
     """
     Trouver le plus court chemin vers la sortie.
 
@@ -55,7 +70,8 @@ def astar(grid):
             if (newrow, newcol) in closed:
                 continue  # cellule déjà traitée: passer au suivant
             n_fringe += 1
-            heuristic = abs(outrow - newrow) + abs(outcol - newcol)
+            # heuristic = abs(outrow - newrow) + abs(outcol - newcol)
+            heuristic = distance1(outrow, outcol, newrow, newcol)
             newcell = (newrow, newcol)
             heapq.heappush(fringe,
                            (heuristic, n_fringe, cost+1, newcell, cell))
@@ -63,6 +79,11 @@ def astar(grid):
 
     print("Astar: Failed to find a solution.")
     return None
+
+
+def dijkstra(grid):
+    """A* réduit à Dijkstra's algorithm en prenant heuristique nulle."""
+    return astar(grid, distance=distance0)
 
 
 if __name__ == "__main__":
