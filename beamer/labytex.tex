@@ -1,0 +1,95 @@
+\documentclass{beamer}
+% francification de LaTeX
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+% imagination
+\usepackage{tikz}
+% options de beamer
+\usetheme{Boadilla}
+\title{Projet \textit{Labyrinthe}}
+\subtitle{Algorithmes et Structures de Donnée}
+\author{Juan-Carlos Barros et Daniel Kessler}
+% et c'est parti
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+%  \frametitle{}
+  % Formation \textit{GymInf},
+  \onslide<-2>{Cours d'\textit{\textcolor{blue}{Algorithmes} et
+      \textcolor{green}{Structures de donnée}}}
+  \par\bigskip
+  \onslide<2->{Projet \textit{Labyrinthe}}
+  \begin{itemize}
+  \item<3->\textcolor{blue}{Algorithme:} \onslide<4->{A*}
+  \item<3->\textcolor{green}{Structure de Donnée:} \onslide<5>{Priority Queue}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Table des matières}
+  \tableofcontents
+\end{frame}
+
+\section{Problème(s)}
+\begin{frame}
+  \frametitle{Un labyrinthe, plusieurs problèmes}
+  \begin{itemize}
+  \item Cherche-t-on un chemin quelconque?
+    \begin{itemize}
+    \item<2-> Oui, on ne traversera le labyrinthe qu'une seule fois.
+    \item<2-> \textbf<4->{On veut le chemin le plus court}, pour peut-être le réutiliser.
+    \end{itemize}
+  \item Connait-on les coordonnées de la sortie dès le départ?
+    \begin{itemize}
+    \item<4-> \textbf{oui}
+    %\item<3-> non
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Un problème, plusieurs solutions}
+  \begin{itemize}
+  \item Breadth-First
+  \item Dijkstra
+  \item A*
+  \end{itemize}
+\end{frame}
+
+\section{Exemple}
+\begin{frame}
+\frametitle{Labyrinthe de démonstration}
+
+\begin{tikzpicture}[scale=.5]
+  % Grid
+  \draw[lightgray!20] (0,0) grid (8,8);
+  
+  % Puzzle
+  \draw[line width=3pt,
+  cap=round,
+  rounded corners=1pt,
+  draw=black!75] (-0.5,-0.5) -| (8.5,8.5)
+  (7.5,8.5)-|(-0.5,0.5) -- (0.5,0.5) (-0.5,2.5)-|(0.5,4.5)
+  (0.5,5.5)|-(4.5,7.5)|-(3.5,3.5)|-(2.5,2.5)|-(3.5,1.5)
+  (8.5,0.5)--(6.5,0.5)
+  (5.5,0.5)-|(3.5,-0.5)
+  (3.5,0.5)-|(1.5,3.5)-|(2.5,5.5)
+  (2.5,4.5)-|(3.5,6.5)-|(1.5,4.5)
+  (7.5,8.5)|-(5.5,6.5)--(5.5,7.5)
+  (6.5,7.5)--(6.5,8.5)
+  (8.5,3.5)-|(6.5,4.5)-|(7.5,5.5)
+  (6.5,5.5)-|(5.5,2.5)--(4.5,2.5)
+  (5.5,2.5)-|(7.5,1.5)--(4.5,1.5)
+  (5.5,4.5)--(4.5,4.5)
+  (1.5,1.5)--(0.5,1.5)
+  (1.5,7.5)--(1.5,8.5);
+  
+  % Start and End Points
+  \onslide<2>{\draw[-latex,line width=3pt,red] (-1,0)--(0,0);}
+  \onslide<3>{\draw[-latex,line width=3pt,red] (8,8) -- (8,9);}
+\end{tikzpicture}
+\end{frame}
+\end{document}
