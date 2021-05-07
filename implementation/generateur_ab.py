@@ -142,8 +142,8 @@ class Maze(labyrinthe.Labyrinthe):
 
 
 if __name__ == "__main__":
-    rows, cols = 5, 20
-    for i in range(3):
-        ratio = i * .5
+    rows, cols = 10, 10
+    for i in range(10):
+        ratio = 0
         GRILLE = Maze(rows,cols, ratio)
         print(GRILLE)
