@@ -85,10 +85,31 @@
 \end{frame}
 
 \section{Algorithme A*}
+\subsection{Heuristique}
+\begin{frame}
+  \frametitle{Heuristique}
+  La distance restante depuis une cellule jusqu'à l'arrivée doit être estimée
+  \textit{sans jamais surestimer}.
+  \begin{itemize}
+  \item<2->{La \textbf{distance de Manhattan} $|\Delta x| + |\Delta y|$
+    est un bon estimateur sur une grille carrée.}
+  \par
+  \item<3>{Une \textbf{heuristique nulle} ramène A* à l'algorithme de Dijkstra
+      (ou Breadth-First Search sur grille carrée).}
+  \end{itemize}
+\end{frame}
+
 \subsection{Structure de données ``Priority Queue''}
 \begin{frame}
   \frametitle{Priority Queue}
-  bla sur cette strucutre de donnée en général
+  \begin{itemize}
+  \item Structure permettant insertion avec priorité et ``pop'' rapide de
+    l'élément prioritaire (ici la priorité est à l'élément de valeur plus basse)
+  \item Implémentation en Python avec le module \textit{heapq}
+  \item Un élément est un tuple (heuristique, numéro, contenu), ainsi en cas
+    d'heuristique égale, le numéro le plus bas (insertion plus ancienne) donne
+    la priorité
+  \end{itemize}
 \end{frame}
 \begin{frame}
   \frametitle{Priority Queue pour A*}
@@ -121,6 +142,15 @@
   \end{block}
 \end{frame}
 
+\subsection{Idée de preuve}
+\begin{frame}
+  \frametitle{Idée de preuve}
+  Si l'heuristique sous-estime le coût du chemin futur, alors on arrive à un
+  noeud toujours par un chemin de distance minimale d'abord.
+
+  [à expliquer]
+\end{frame}
+
 \subsection{Exemple de résolution}
 \begin{frame}
   \frametitle{Exemple de résolution}
@@ -140,26 +170,37 @@
     \only<1>{\textbf{Objectif}\par
       Trouver le chemin le plus court entre le \textbf{D}épart
       et l'\textbf{A}rrivée}
-    \only<2>{Chaque noeud est à une distance réelle de la sortie, mais ces
+    \only<2>{Chaque noeud est à une distance réelle de l'arrivée, mais ces
       distances ne sont pas encore connues.}
     \only<3>{Le départ est mis en file d'attente, avec une priorité 0.}
     \only<4>{Le seul voisin est évalué:
       \begin{itemize}
-      \item coût réel pour y accéder: 1
-      \item coût heuristique vers la sortie: 17
+      \item coût réel pour y accéder: \textcolor{green}1
+      \item coût heuristique pour la suite: \textcolor{red}{17}
       \item coût heuristique total (priorité): 18
       \end{itemize}
     }
-    \only<5-26>{L'algorithme poursuit son chemin.}
-    \only<27>{Un chemin vers la sortie a été trouvé!}
-    \only<28->{Backtracking pour reconstituer le chemin}
+    \only<5-26>{
+      Légende:
+      \begin{itemize}
+      \item\textcolor{green}{coût réel jusqu'ici}
+      \item\textcolor{red}{coût heuristique pour la suite}
+      \item {coût heuristique total}
+      \end{itemize}
+      \medskip
+      L'algorithme poursuit son chemin.}
+    \onslide<15,19,20>{\par Parfois deux choix ont la même priorité.}
+    \only<27->{Un chemin vers la sortie a été trouvé!}
+    \onslide<28->{Backtracking pour reconstituer le chemin}
   \end{minipage}
-  
 \end{frame}
 
 \section{Complexité}
 \begin{frame}
   \frametitle{Complexité}
+  Le pire des cas sera réalisé par un labyrinthe dont le meilleur chemin revient
+  souvent en arrière (s'éloigne de l'arrivée). Dans ce cas, aucun gain n'est
+  réalisé par rapport à l'algorithme de Dijsktra.
 \end{frame}
 
 \section{Tests avec Python}
