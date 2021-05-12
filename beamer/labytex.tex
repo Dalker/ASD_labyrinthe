@@ -206,6 +206,7 @@
 \section{Tests avec Python}
 \begin{frame}
   \frametitle{Tests avec Python}
+  \includegraphics[width=.9\linewidth]{manhattan_vs_null.png}
 \end{frame}
 
 \section{Conclusion}
@@ -217,85 +218,4 @@
   \end{itemize}
 \end{frame}
 
-\section*{-- fin des vrais slides --}
-
-%\section{-- fin des vrais slides --}
-\begin{frame}
-  \begin{center}
-    {\Huge Fin des vrais slides}
-    \par\bigskip
-    Tout ce qui suit sont des essais de mise en page, etc.
-  \end{center}
-\end{frame}
-
-%\subsection{Test de pseudo-code}
-\begin{frame}
-  \frametitle{Effets simples dans beamer}
-  \begin{block}{ceci est un bloc}
-    On peut pseudo-inclure du code.
-  \end{block}
-  \begin{definition}
-    Le pseudo-code est un outil de communication entre humains.
-  \end{definition}
-  \begin{example}
-    Ce qui suit est en fait du vrai code: un outil de communication humain-machine.
-  \end{example}
-  \begin{semiverbatim}
-    print("Hello, world!")
-  \end{semiverbatim}
-  \begin{alertblock}{Attention!}
-    Ce slide ne doit pas être gardé dans la vraie présentation!
-  \end{alertblock}
-\end{frame}
-
-%\subsection{Essai importation depuis l'odt}
-\begin{frame}
-  \frametitle{Tentons d'importer}
-  \begin{minipage}{.4\textwidth}    
-    \only<1>{\includegraphics[width=\linewidth]{../diapos/page1.png}}
-    \only<2>{\includegraphics[width=\linewidth]{../diapos/page2.png}}
-    \only<3>{\includegraphics[width=\linewidth]{../diapos/page3.png}}
-  \end{minipage}
-  \quad
-  \begin{minipage}{.4\textwidth}
-    \only<1>{Ceci est un labyrinthe.}
-    \onslide<2-3>{Il a un coût réel ``c''.}
-    \par\medskip
-    \onslide<3>{Voici le nombre de pas nécessaires à atteindre chaque case.}
-  \end{minipage}
-\end{frame}
-
-%\subsection{Exemple}
-\begin{frame}
-\frametitle{Labyrinthe de démonstration}
-
-\begin{tikzpicture}[scale=.5]
-  % Grid
-  \draw[lightgray!20] (0,0) grid (8,8);
-  
-  % Puzzle
-  \draw[line width=3pt,
-  cap=round,
-  rounded corners=1pt,
-  draw=black!75] (-0.5,-0.5) -| (8.5,8.5)
-  (7.5,8.5)-|(-0.5,0.5) -- (0.5,0.5) (-0.5,2.5)-|(0.5,4.5)
-  (0.5,5.5)|-(4.5,7.5)|-(3.5,3.5)|-(2.5,2.5)|-(3.5,1.5)
-  (8.5,0.5)--(6.5,0.5)
-  (5.5,0.5)-|(3.5,-0.5)
-  (3.5,0.5)-|(1.5,3.5)-|(2.5,5.5)
-  (2.5,4.5)-|(3.5,6.5)-|(1.5,4.5)
-  (7.5,8.5)|-(5.5,6.5)--(5.5,7.5)
-  (6.5,7.5)--(6.5,8.5)
-  (8.5,3.5)-|(6.5,4.5)-|(7.5,5.5)
-  (6.5,5.5)-|(5.5,2.5)--(4.5,2.5)
-  (5.5,2.5)-|(7.5,1.5)--(4.5,1.5)
-  (5.5,4.5)--(4.5,4.5)
-  (1.5,1.5)--(0.5,1.5)
-  (1.5,7.5)--(1.5,8.5);
-  
-  % Start and End Points
-  \onslide<2>{\draw[-latex,line width=3pt,red] (-1,0)--(0,0);}
-  \onslide<3>{\draw[-latex,line width=3pt,red] (8,8) -- (8,9);}
-\end{tikzpicture}
-\end{frame}
 \end{document}
