@@ -1,11 +1,12 @@
 """
 Test visuel d'un générateur et solveur de labyrinthe.
 
-Author: Dalker (daniel.kessler@dalker.org)
+Author: Dalker
 Date: 2021-04-10
 """
 
 import logging as log
+# import concurrent.futures as cf
 
 import matplotlib.pyplot as plt
 
@@ -28,10 +29,8 @@ def test(maze, solver, distance, axes):
         print("No A* solution found.")
 
 
-if __name__ == "__main__":
-    log.basicConfig(level=log.INFO)
-    print("* starting basic test *")
-    # test(gen.MAZE10, view=True)
+def triple_test():
+    """Comparer 3 choix de distances: Manhattan, Euclidean, 0."""
     maze = ab.Maze(20, 30, 0.1)
     d1 = astar.distance1
     d2 = astar.distance2
@@ -46,4 +45,27 @@ if __name__ == "__main__":
     test(maze, astar.astar, d1, ax1)
     test(maze, astar.astar, d2, ax2)
     test(maze, astar.astar, dj, axj)
+
+
+def astar_vs_dijkstra():
+    """Comparer 2 choix de distances: heuristique Manhattan vs. 0."""
+    maze = ab.Maze(25, 25, 0)
+    d0 = astar.distance0
+    d1 = astar.distance1
+    fig = plt.figure()
+    ax0 = fig.add_subplot(1, 2, 1)
+    ax0.set_title("A* with null heuristic")
+    ax1 = fig.add_subplot(1, 2, 2)
+    ax1.set_title("A* with Manhattan heuristic")
+    # tentative de concurrence ci-dessous: ne marche pas à cause du GUI
+    # with cf.ThreadPoolExecutor(max_workers=2) as executor:
+    #     executor.submit(test, maze, astar.astar, d0, ax0)
+    #     executor.submit(test, maze, astar.astar, d1, ax1)
+    test(maze, astar.astar, d0, ax0)
+    test(maze, astar.astar, d1, ax1)
+
+
+if __name__ == "__main__":
+    log.basicConfig(level=log.INFO)
+    astar_vs_dijkstra()
     plt.show()

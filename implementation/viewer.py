@@ -26,16 +26,16 @@ class AstarView():
         lignes = str(grid).split("\n")
         n_rows = len(lignes)
         n_cols = max(len(ligne) for ligne in lignes)
-        self.update_freq = int((n_rows * n_cols)**.8)
+        self.update_freq = int((n_rows * n_cols)**.5) // 2
         self.update_next = 1
         self.fringe = fringe
         self.closed = closed
-        self._matrix = [[4 if (row, col) in self.grid
+        self._matrix = [[10 if (row, col) in self.grid
                          else 0
                          for col in range(n_cols)]
                         for row in range(n_rows)]
         self._image = self.axes.matshow(self._matrix,
-                                        cmap=plt.get_cmap("plasma"))
+                                        cmap=plt.get_cmap("twilight"))
         self.axes.set_axis_off()
         self.update()
 
@@ -51,13 +51,13 @@ class AstarView():
                     row, col = cell
                 except ValueError:
                     row, col = cell[-2]
-                self._matrix[row][col] = 3
+                self._matrix[row][col] = 5
             self._image.set_data(self._matrix)
             plt.pause(0.000001)
 
     def showpath(self, path):
         """Montrer le chemin trouvé et laisser l'image visible."""
         for row, col in path:
-            self._matrix[row][col] = 1
+            self._matrix[row][col] = 8
             self._image.set_data(self._matrix)
         plt.pause(0.00001)
