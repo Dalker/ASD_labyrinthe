@@ -52,7 +52,7 @@ def time_tests(solver, max_size, solver2=None, rwd=0):
     gentimes = []
     soltimes = []
     soltimes2 = []
-    size = 10
+    size = 30
     while size <= max_size:
         gentime, *soltime = single_test(size, solver, solver2=solver2,
                                         ratio_wall_destr=rwd)
@@ -122,7 +122,7 @@ def analyze(size, gent, solt, solt2=None, view=True):
 
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    msz = 70  # max_size
+    msz = 100  # max_size
     rwd = 0.01  # rate of wall destruction
     # analyze(*time_tests(astar_heapq, 70, rwd=.05))
     print("* Comparaison des algorithmes Dijkstra vs. A* avec Manhattan distance *")
