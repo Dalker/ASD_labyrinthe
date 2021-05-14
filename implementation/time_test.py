@@ -4,7 +4,7 @@ Tests expérimentaux de complexité algorithmique pour labyrinthes.
 L'augmentation du temps en fonction de la taille de la grille est observée
 pour un générateur et un solveur de labyrinthes.
 
-Authors: JCB (juan-carlos@barros.ch) et Dalker (daniel.kessler@dalker.org)
+Authors: Dalker & JCB
 Date: 2021-04-10
 """
 
@@ -18,7 +18,9 @@ import matplotlib.pyplot as plt
 import generateur_ab as ab
 from solveur_astar_naif import astar as astar_naif
 from solveur_astar_heapq import astar as astar_heapq
-from solveur_astar_heapq import dijkstra
+from solveur_astar_v3 import astar as astar_v3
+from solveur_astar_v3 import null_distance
+# from solveur_astar_heapq import dijkstra
 
 
 def single_test(size, solver, solver2=None, ratio_wall_destr=0):
@@ -87,21 +89,21 @@ def pente(x, y):
     return res
 
 
-def analyze(size, gent, solt, solt2=None, view=True):
+def analyze(size, gent, solt, solt2=None, view=None):
     """Analyzer complexité expérimentale de génération/résolution."""
     if view:
         _, (axes_lin, axes_log) = plt.subplots(1, 2)
-        axes_lin.plot(size, gent, "+b", label="generate")
-        axes_lin.plot(size, solt, "+g", label="solve")
+        # axes_lin.plot(size, gent, "+b", label="generate")
+        axes_lin.plot(size, solt, "+g", label=view[0])
         if solt2 is not None:
-            axes_lin.plot(size, solt2, "+c", label="solve 2")
+            axes_lin.plot(size, solt2, "+c", label=view[1])
         axes_lin.set_xlabel("taille de la grille")
         axes_lin.set_ylabel("durée (s)")
         axes_lin.legend()
-        axes_log.plot(np.log(size), np.log(gent), "+b", label="generate")
-        axes_log.plot(np.log(size), np.log(solt), "+g", label="solve")
+        # axes_log.plot(np.log(size), np.log(gent), "+b", label="generate")
+        axes_log.plot(np.log(size), np.log(solt), "+g", label=view[0])
         if solt2 is not None:
-            axes_log.plot(np.log(size), np.log(solt2), "+c", label="solve 2")
+            axes_log.plot(np.log(size), np.log(solt2), "+c", label=view[1])
         axes_log.set_xlabel("log(taille)")
         axes_log.set_ylabel("log(durée)")
         axes_log.legend()
@@ -120,20 +122,39 @@ def analyze(size, gent, solt, solt2=None, view=True):
     plt.show()
 
 
+def comparer_solveurs(maxsize, rwd):
+    """Comparer les différentes implémentations, sans graphique."""
+    print("* Comparaison implémentation v1 (sans heapq) "
+          "vs v3 (heapq amélioré) *")
+    print("  Algo1 = A* v1, Algo2 = A* v3")
+    sz, gent, solt, solt2 = time_tests(astar_naif, maxsize, solver2=astar_v3,
+                                       rwd=rwd)
+    analyze(sz, gent, solt, solt2=solt2, view=False)
+
+    print("* Comparaison implémentation v2 (heapq lourd) "
+          "vs v3 (heapq amélioré) *")
+    print("  Algo1 = A* v2, Algo2 = A* v3")
+    sz, gent, solt, solt2 = time_tests(astar_heapq, maxsize, solver2=astar_v3,
+                                       rwd=rwd)
+    analyze(sz, gent, solt, solt2=solt2,
+            view=("v2", "v3"))
+
+
+def comparer_distances(maxsize, rwd):
+    """Comparer choix de distance heuristique dans même algo."""
+    print("* Comparaison heuristique nulle vs Manhattan distance *")
+    print("  solveur1 = heuristique 0 (=Dijkstra), "
+          "solveur2 = heuristique Manhattan")
+    sz, gent, solt, solt2 = time_tests(lambda mz:
+                                       astar_v3(mz, distance=null_distance),
+                                       maxsize, solver2=astar_v3, rwd=rwd)
+    analyze(sz, gent, solt, solt2=solt2,
+            view=("heuristique nulle", "Manhattan"))
+
+
 if __name__ == "__main__":
     log.basicConfig(level=log.INFO)
-    msz = 100  # max_size
+    msz = 80  # max_size
     rwd = 0.01  # rate of wall destruction
-    # analyze(*time_tests(astar_heapq, 70, rwd=.05))
-    print("* Comparaison des algorithmes Dijkstra vs. A* avec Manhattan distance *")
-    print("Algo1 = A* avec distance nulle = Dijkstra's, Algo2 = A* avec Manhattan, SD = heapq")
-    sz, gent, solt, solt2 = time_tests(dijkstra, msz, solver2=astar_heapq,
-                                       rwd=rwd)
-    print("analyzing results with Dijkstra vs. Manhattan distance A* (both with heapq)")
-    analyze(sz, gent, solt, solt2=solt2, view=False)
-    print("* Comparaison de l'effet de la structure de donnée *")
-    print("Algo = A*, SD1 = dict, SD2 = heapq")
-    sz, gent, solt, solt2 = time_tests(astar_naif, msz, solver2=astar_heapq,
-                                       rwd=rwd)
-    print("analyzing results with A* with dict vs. heapq")
-    analyze(sz, gent, solt, solt2=solt2, view=False)
+    # comparer_solveurs(msz, rwd)
+    comparer_distances(msz, rwd)
