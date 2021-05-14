@@ -75,7 +75,7 @@ def astar(grid, distance=manhattan_distance, view=None):
     parent = {grid.start: None}
 
     if view is not None:
-        viewer = AstarView(grid, marge.queue, parent, view)
+        viewer = AstarView(grid, marge.queue, cout_reel, view)
 
     while True:
         if view is not None:

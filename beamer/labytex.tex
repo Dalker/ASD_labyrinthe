@@ -190,7 +190,7 @@
     \par\smallskip
     \onslide<2->{Cette propriété garantit de trouver la sortie, sans se ``perdre'' dans des
       boucles éventuelles.}
-  \item<3-> \textbf{Admissibilité: l'heuristique ne sur-estime jamais une distance}
+  \item<3-> \textbf{Admissibilité: l'heuristique ne surestime jamais une distance}
     \par\smallskip
     \onslide<4->{Cela garantit qu'il n'y a pas de chemin plus court que celui
       trouvé.}\par\smallskip
@@ -208,10 +208,10 @@
     \only<1>{\includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}}
     \only<2>{\includegraphics[width=\linewidth]{../diapos/V2bis/page2.png}} % 2 ou 4
     \only<3>{\includegraphics[width=\linewidth]{../diapos/V2bis/page5.png}} % 5 ou 6
-    \only<4>{\includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}}
-    \setcounter{pngnumber}{1}
-    \forloop{onlynumber}{5}{\value{onlynumber} < 65}{
-      \only<\arabic{onlynumber}>{only \theonlynumber, png \thepngnumber}\par
+    \only<4>{\includegraphics[width=\linewidth]{../diapos/V2/page1.png}}
+    \setcounter{pngnumber}{2}
+    \forloop{onlynumber}{5}{\value{onlynumber} < 66}{
+      % \only<\arabic{onlynumber}>{only \theonlynumber, png \thepngnumber}\par
       \only<\arabic{onlynumber}>{\includegraphics[width=\linewidth]{../diapos/V2/page\arabic{pngnumber}.png}}
       \stepcounter{pngnumber}
     }
@@ -233,7 +233,7 @@
       \item coût heuristique total (priorité): 18
       \end{itemize}
     }
-    \only<6-26>{
+    \only<6-43>{
       Légende:
       \begin{itemize}
       \item\textcolor{green}{coût réel jusqu'ici}
@@ -242,13 +242,12 @@
       \end{itemize}
       \medskip
       L'algorithme poursuit son chemin.}
-    \only<6-7>{\par
-      Parfois deux choix ont la même priorité, le choix est arbitraire.}
-    \only<17-28>{\par
-      Parfois la priorité participe vraiment au choix.}
-    \only<33,37>{\par Parfois un nouveau chemin améliore l'accès à une même cellule.}
-    \only<44->{Un chemin vers la sortie a été trouvé!}
-    \onslide<43->{Backtracking pour reconstituer le chemin}
+    \par\medskip
+    \only<7-8>{Parfois deux choix ont la même priorité, le choix est arbitraire.}
+    \only<18-29>{Parfois la priorité participe vraiment au choix.}
+    \only<34,38>{Parfois un nouveau chemin améliore l'accès à une même cellule.}
+    \only<43->{Un chemin vers la sortie a été trouvé!}
+    \onslide<44->{Backtracking pour reconstituer le chemin}
   \end{minipage}
 \end{frame}
 
