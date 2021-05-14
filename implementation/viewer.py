@@ -48,7 +48,7 @@ class AstarView():
                 self._matrix[row][col] = 2
             for cell in self.fringe:
                 try:
-                    row, col = cell
+                    row, col = cell[1]
                 except ValueError:
                     row, col = cell[-2]
                 self._matrix[row][col] = 5

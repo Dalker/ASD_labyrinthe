@@ -74,7 +74,12 @@ def astar(grid, distance=manhattan_distance, view=None):
     cout_reel = {grid.start: 0}
     parent = {grid.start: None}
 
+    if view is not None:
+        viewer = AstarView(grid, marge.queue, parent, view)
+
     while True:
+        if view is not None:
+            viewer.update()
         noeud_courant = marge.pop()
         if noeud_courant is None:
             raise ValueError("A*: la grille fournie n'a pas de solution")
@@ -99,7 +104,9 @@ def astar(grid, distance=manhattan_distance, view=None):
     while etape is not None:
         chemin.append(etape)
         etape = parent[etape]
-    return list(reversed(chemin))
+    if view is not None:
+        viewer.showpath(chemin)
+    return reversed(chemin)
 
 
 if __name__ == "__main__":
@@ -110,6 +117,6 @@ if __name__ == "__main__":
     # from generateur_ab import Maze
     # maze = Maze(50, 60, 0.01)
     print(maze)
-    print(astar(maze, distance=manhattan_distance))
+    print(list(astar(maze, distance=manhattan_distance)))
     # cProfile.run("astar(maze, distance=distance0)", sort=SortKey.TIME)
     # cProfile.run("astar(maze, distance=distance1)", sort=SortKey.TIME)

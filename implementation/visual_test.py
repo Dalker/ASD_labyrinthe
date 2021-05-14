@@ -12,7 +12,8 @@ import matplotlib.pyplot as plt
 
 import generateur_ab as ab
 # import solveur_astar_naif as astar
-import solveur_astar_heapq as astar
+import solveur_astar_heapq as astar_v2
+import solveur_astar_v3 as astar_v3
 
 
 def test(maze, solver, distance, axes):
@@ -30,11 +31,11 @@ def test(maze, solver, distance, axes):
 
 
 def triple_test():
-    """Comparer 3 choix de distances: Manhattan, Euclidean, 0."""
+    """Comparer 3 choix de distances: Manhattan, Euclidean, 0 (pour v2)."""
     maze = ab.Maze(20, 30, 0.1)
-    d1 = astar.distance1
-    d2 = astar.distance2
-    dj = astar.distance0
+    d1 = astar_v2.distance1
+    d2 = astar_v2.distance2
+    dj = astar_v2.distance0
     fig = plt.figure()
     ax1 = fig.add_subplot(2, 2, 1)
     ax1.set_title("A* with Manhattan distance")
@@ -42,16 +43,14 @@ def triple_test():
     ax2.set_title("A* with euclidean distance")
     axj = fig.add_subplot(2, 2, 3)
     axj.set_title("A* with 0 distance (= Dijkstra)")
-    test(maze, astar.astar, d1, ax1)
-    test(maze, astar.astar, d2, ax2)
-    test(maze, astar.astar, dj, axj)
+    test(maze, astar_v2.astar, d1, ax1)
+    test(maze, astar_v2.astar, d2, ax2)
+    test(maze, astar_v2.astar, dj, axj)
 
 
 def astar_vs_dijkstra():
-    """Comparer 2 choix de distances: heuristique Manhattan vs. 0."""
+    """Comparer 2 choix de distances: heuristique Manhattan vs. 0 (pour v3)."""
     maze = ab.Maze(25, 25, 0)
-    d0 = astar.distance0
-    d1 = astar.distance1
     fig = plt.figure()
     ax0 = fig.add_subplot(1, 2, 1)
     ax0.set_title("A* with null heuristic")
@@ -61,8 +60,8 @@ def astar_vs_dijkstra():
     # with cf.ThreadPoolExecutor(max_workers=2) as executor:
     #     executor.submit(test, maze, astar.astar, d0, ax0)
     #     executor.submit(test, maze, astar.astar, d1, ax1)
-    test(maze, astar.astar, d0, ax0)
-    test(maze, astar.astar, d1, ax1)
+    test(maze, astar_v3.astar, astar_v3.null_distance, ax0)
+    test(maze, astar_v3.astar, astar_v3.manhattan_distance, ax1)
 
 
 if __name__ == "__main__":
