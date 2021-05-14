@@ -57,7 +57,7 @@
   \end{itemize}
   \end{minipage}
   \begin{minipage}{.3\linewidth}
-  \onslide<2->{\includegraphics[width=\linewidth]{../diapos/page1.png}}    
+  \onslide<2->{\includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}}    
   \end{minipage}
 \end{frame} % Titre
 
@@ -205,13 +205,14 @@
 \begin{frame}
   \frametitle{Exemple de résolution}
   \begin{minipage}{.4\textwidth}    
-    \only<1>{\includegraphics[width=\linewidth]{../diapos/page1.png}}
-    \only<2>{\includegraphics[width=\linewidth]{../diapos/page3.png}}
-    \only<3>{\includegraphics[width=\linewidth]{../diapos/page2.png}}
-    \setcounter{pngnumber}{7}
-    \forloop{onlynumber}{4}{\value{onlynumber} < 46}{
-      % \only<\arabic{onlynumber}>{only \theonlynumber, png \thepngnumber}\par
-      \only<\arabic{onlynumber}>{\includegraphics[width=\linewidth]{../diapos/page\arabic{pngnumber}.png}}
+    \only<1>{\includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}}
+    \only<2>{\includegraphics[width=\linewidth]{../diapos/V2bis/page2.png}} % 2 ou 4
+    \only<3>{\includegraphics[width=\linewidth]{../diapos/V2bis/page5.png}} % 5 ou 6
+    \only<4>{\includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}}
+    \setcounter{pngnumber}{1}
+    \forloop{onlynumber}{5}{\value{onlynumber} < 65}{
+      \only<\arabic{onlynumber}>{only \theonlynumber, png \thepngnumber}\par
+      \only<\arabic{onlynumber}>{\includegraphics[width=\linewidth]{../diapos/V2/page\arabic{pngnumber}.png}}
       \stepcounter{pngnumber}
     }
   \end{minipage}
@@ -220,17 +221,19 @@
     \only<1>{\textbf{Objectif}\par
       Trouver le chemin le plus court entre le \textbf{D}épart
       et l'\textbf{A}rrivée}
-    \only<2>{Chaque noeud est à une distance réelle de l'arrivée, mais ces
+    \only<2>{Chaque noeud est à une distance réelle du départ, qui sera
+      découverte en cours de route.}
+    \only<3>{Chaque noeud est à une distance réelle de l'arrivée, mais ces
       distances ne sont pas encore connues.}
-    \only<3>{Le départ est mis en file d'attente, avec une priorité 0.}
-    \only<4>{Le seul voisin est évalué:
+    \only<4>{Le départ est mis en file d'attente, avec une priorité 0.}
+    \only<5>{Le seul voisin est évalué:
       \begin{itemize}
       \item coût réel pour y accéder: \textcolor{green}1
       \item coût heuristique pour la suite: \textcolor{red}{17}
       \item coût heuristique total (priorité): 18
       \end{itemize}
     }
-    \only<5-26>{
+    \only<6-26>{
       Légende:
       \begin{itemize}
       \item\textcolor{green}{coût réel jusqu'ici}
@@ -239,9 +242,13 @@
       \end{itemize}
       \medskip
       L'algorithme poursuit son chemin.}
-    \onslide<15,19,20>{\par Parfois deux choix ont la même priorité.}
-    \only<27->{Un chemin vers la sortie a été trouvé!}
-    \onslide<28->{Backtracking pour reconstituer le chemin}
+    \only<6-7>{\par
+      Parfois deux choix ont la même priorité, le choix est arbitraire.}
+    \only<17-28>{\par
+      Parfois la priorité participe vraiment au choix.}
+    \only<33,37>{\par Parfois un nouveau chemin améliore l'accès à une même cellule.}
+    \only<44->{Un chemin vers la sortie a été trouvé!}
+    \onslide<43->{Backtracking pour reconstituer le chemin}
   \end{minipage}
 \end{frame}
 
