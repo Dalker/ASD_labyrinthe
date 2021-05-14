@@ -74,12 +74,12 @@
   \item<1-> Cherche-t-on un chemin quelconque?
     \begin{itemize}
     \item<2-> Oui, on ne traversera le labyrinthe qu'une seule fois.
-    \item<2-> \textbf<3->{On veut le chemin le plus court}, pour peut-être le réutiliser.
+    \item<2-> \textbf<3->{Non, on veut le chemin le plus court}, pour peut-être le réutiliser.
     \end{itemize}
   \item<4-> Connait-on les coordonnées de la sortie dès le départ?
     \begin{itemize}
     \item<5-> \textbf<6->{Oui, et cette information pourra nous aider.}
-    \item<5-> Non, le lieu de la sortie partie des inconnues.
+    \item<5-> Non, le lieu de la sortie fait partie des inconnues.
     \end{itemize}
   \end{itemize}
 \end{frame} % choix du problème
@@ -122,8 +122,8 @@
     \item<3-> extraire (pop) la cellule prioritaire $C$ de la file d'attente
     \item<4-> si $C$ est la cellule d'arrivée $A$, retourner le chemin qui y amène
           (via backtracking sur les prédecesseurs)
-    \item<5-> sinon, pour chaque vosin $V$ de $C$ qui n'est pas déjà accessible
-      à moindre co'ut
+    \item<5-> sinon, pour chaque voisin $V$ de $C$ qui n'est pas déjà accessible
+      à moindre coût
       \begin{itemize}
       \item<6-> mémoriser le prédecesseur de $V$ et le coût d'accès à $V$
       \item<7-> ajouter $V$ à la file d'attente
@@ -143,7 +143,7 @@
 
   \medskip
   \onslide<2->{La distance restante depuis une cellule jusqu'à l'arrivée doit être estimée
-  \textit{sans jamais surestimer}.}
+  \textit{sans jamais la surestimer}.}
   \begin{itemize}
   \item<3->{La \textbf{distance de Manhattan} $|\Delta x| + |\Delta y|$
     est un bon estimateur si les mouvements permis sont horizontaux et verticaux.}
@@ -181,15 +181,16 @@
 \subsection{Idée de preuve}
 \begin{frame}
   \frametitle{Preuve de l'algorithme (grandes lignes)}
-  L'heuristique $h(C,S)$ qui estime le chemin restant doit satisfaire deux conditions.
+  L'heuristique $h(C)$ qui estime le chemin restant depuis une cellule $C$
+  doit satisfaire deux conditions.
   \begin{enumerate}
-  \item<2-> \textbf{l'inégalité trianguaire}:
-    $h(C_1,S) \leq r(C_1,C_2) + h(C_2, S)$ où $C_1, C_2$ sont deux cellules,
-    $r(C_1, C_2)$ et la distance réelle entre elles.
+  \item<2-> \textbf{Monotonicité}: sorte d'inégalité triangulaire faible
+    $h(C_1) \leq r(C_1,C_2) + h(C_2)$ où $C_1, C_2$ sont deux cellules,
+    $r(C_1, C_2)$ est la distance réelle entre elles.
     \par\smallskip
-    \onslide<2->{Elle garantit de trouver la sortie, sans se ``perdre'' dans des
+    \onslide<2->{Cette propriété garantit de trouver la sortie, sans se ``perdre'' dans des
       boucles éventuelles.}
-  \item<3-> \textbf{l'heuristique ne sur-estime jamais une distance}
+  \item<3-> \textbf{Admissibilité: l'heuristique ne sur-estime jamais une distance}
     \par\smallskip
     \onslide<4->{Cela garantit qu'il n'y a pas de chemin plus court que celui
       trouvé.}\par\smallskip
