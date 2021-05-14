@@ -74,7 +74,9 @@ class AstarView():
 
     def colornum(self, row, col):
         """Translate a cost into a number between 0 and 9."""
-        cost = self.explored[(row, col)]
+        if self.explored[(row, col)]:
+            cost = self.explored[(row, col)]
+        else: cost = row * col // 2 + 1
         if cost > self.max_cost:
             print("cost overflow:", cost, "/", self.max_cost)
         return EXPLORED + min(10 * cost // self.max_cost, 9)
