@@ -1,7 +1,7 @@
 """
 Générateur de labyrinthes via "dessin ASCII".
 
-Authors: Dalker (daniel.kessler@dalker.org) & JCB for the art.
+Authors: Dalker, & JCB for the art.
 Date: 2021-04-09
 """
 
