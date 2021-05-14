@@ -12,7 +12,7 @@ L'objet de base est une cellule, représentée par un tuple (row, col, cost), o�
 arriver jusqu'à cette cellule depuis le départ, s'il est déjà connu, None
 sinon.
 
-Author: Dalker (daniel.kessler@dalker.org)
+Author: Dalker
 Start Date: 2021.04.06
 """
 

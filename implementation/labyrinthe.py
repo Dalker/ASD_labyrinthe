@@ -5,7 +5,7 @@ Ce module est prévu pour être importé par les modules générateurs et solveu
 Il a pour but de définier la/les structure(s) communes permettant à ceux-ci
 de communiquer entre eux de manière claire.
 
-Author: Dalker (daniel.kessler@dalker.org)
+Author: Dalker
 Date: 2021-04-09
 """
 
