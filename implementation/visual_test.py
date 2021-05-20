@@ -55,6 +55,10 @@ def astar_vs_dijkstra():
     ax0 = fig.add_subplot(1, 2, 1)
     ax0.set_title("A* with null heuristic")
     ax1 = fig.add_subplot(1, 2, 2)
+    ax1.set_xlim(0, 50)
+    ax1.set_ylim(50, 0)
+    ax1.set_axis_off()
+    ax1.matshow([[0]])
     ax1.set_title("A* with Manhattan heuristic")
     # tentative de concurrence ci-dessous: ne marche pas à cause du GUI
     # with cf.ThreadPoolExecutor(max_workers=2) as executor:
