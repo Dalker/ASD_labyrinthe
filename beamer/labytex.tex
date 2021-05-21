@@ -1,4 +1,5 @@
-\documentclass[handout]{beamer}
+\documentclass[]{beamer}
+% \documentclass[handout]{beamer}
 % francification de LaTeX
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
@@ -89,6 +90,8 @@
 \subsection{Choix de l'Algorithme}
 \begin{frame}
   \frametitle{Un problème, plusieurs solutions}
+  \begin{tabular}{p{.65\textwidth}p{.35\textwidth}}
+    %\vspace{-15ex}
   \begin{itemize}
   \item<1-> Breadth-First Search
     \begin{itemize}
@@ -107,6 +110,10 @@
       à la sortie
     \end{itemize}
   \end{itemize}
+  & \par\smallskip\vspace{-2ex}\phantom+
+    \includegraphics[width=.6\linewidth]{../diapos/V1/page1.png}\par\phantom+
+    \onslide<2->{\includegraphics[width=.6\linewidth]{../diapos/V1/page4.png}}
+  \end{tabular}
 \end{frame}
 
 \section{Algorithme A*}
