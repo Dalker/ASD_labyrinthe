@@ -1,7 +1,10 @@
-\documentclass{beamer}
+\documentclass[]{beamer}
+% \documentclass[handout]{beamer}
 % francification de LaTeX
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
+% urls cachés
+\usepackage{hyperref}
 % imagination
 \usepackage{tikz}
 % options de beamer
@@ -87,6 +90,8 @@
 \subsection{Choix de l'Algorithme}
 \begin{frame}
   \frametitle{Un problème, plusieurs solutions}
+  \begin{tabular}{p{.65\textwidth}p{.35\textwidth}}
+    %\vspace{-15ex}
   \begin{itemize}
   \item<1-> Breadth-First Search
     \begin{itemize}
@@ -105,6 +110,10 @@
       à la sortie
     \end{itemize}
   \end{itemize}
+  & \par\smallskip\vspace{-2ex}\phantom+
+    \includegraphics[width=.6\linewidth]{../diapos/V1/page1.png}\par\phantom+
+    \onslide<2->{\includegraphics[width=.6\linewidth]{../diapos/V1/graphe.png}}
+  \end{tabular}
 \end{frame}
 
 \section{Algorithme A*}
@@ -251,7 +260,7 @@
   \end{minipage}
 \end{frame}
 
-\section{Complexité}
+\subsection{Complexité}
 \begin{frame}
   \frametitle{Complexité}
   Le pire des cas sera réalisé par un labyrinthe dont le meilleur chemin revient
@@ -312,7 +321,12 @@ while True:
         break  # chemin optimal trouvé
     # ... traiter noeud courant
 \end{lstlisting}
-la suite dans: \url{https://github.com/Dalker/ASD_labyrinthe/}
+la suite dans: % \url{https://github.com/Dalker/ASD_labyrinthe/}
+\href{https://github.com/Dalker/ASD\_labyrinthe/tree/main/implementation}{https://github.com/Dalker/ASD\_labyrinthe/}
+\begin{enumerate}
+\item cloner le dossier \texttt{implementation}
+\item exécuter \texttt{visual\_test.py} et \texttt{time\_test.py}
+\end{enumerate}
 \end{frame}
 \begin{frame}
   \frametitle{Tests avec Python}
@@ -344,7 +358,7 @@ la suite dans: \url{https://github.com/Dalker/ASD_labyrinthe/}
 \begin{frame}
   \frametitle{Conclusion}
   \begin{itemize}
-  \item \ldots
+  \item Fourmis
   \item Robot-Aspirateur
   \end{itemize}
 \end{frame}

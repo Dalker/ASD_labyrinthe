@@ -50,11 +50,16 @@ def triple_test():
 
 def astar_vs_dijkstra():
     """Comparer 2 choix de distances: heuristique Manhattan vs. 0 (pour v3)."""
-    maze = ab.Maze(25, 25, 0)
+    TAILLE = 50
+    maze = ab.Maze(TAILLE, TAILLE, 0)
     fig = plt.figure()
     ax0 = fig.add_subplot(1, 2, 1)
     ax0.set_title("A* with null heuristic")
     ax1 = fig.add_subplot(1, 2, 2)
+    ax1.set_xlim(0, 2*TAILLE)
+    ax1.set_ylim(2*TAILLE, 0)
+    ax1.set_axis_off()
+    ax1.matshow([[0]])
     ax1.set_title("A* with Manhattan heuristic")
     # tentative de concurrence ci-dessous: ne marche pas à cause du GUI
     # with cf.ThreadPoolExecutor(max_workers=2) as executor:

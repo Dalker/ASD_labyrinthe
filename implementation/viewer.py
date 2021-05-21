@@ -1,4 +1,9 @@
-"""Viewer for A* type solver."""
+"""
+Viewer for A* type solver.
+
+Author: Dalker
+Date: 2021.04-05
+"""
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
@@ -15,7 +20,7 @@ FRINGE = 2
 EXPLORED = 3  # start of Explored values (10 shades)
 WALL = 14
 
-colormap = ListedColormap(['#222',  # unknown -> gris
+COLORMAP = ListedColormap(['#222',  # unknown -> gris
                            '#a40',  # path -> orange
                            '#770',  # fringe -> jaune
                            # 10 tons pour "explored" selon coût
@@ -66,19 +71,21 @@ class AstarView():
                          for col in range(n_cols)]
                         for row in range(n_rows)]
         self._image = self.axes.matshow(self._matrix,
-                                        cmap=colormap,
+                                        cmap=COLORMAP,
                                         # cmap=plt.get_cmap("twilight")
                                         )
         self.axes.set_axis_off()
         self.update()
+        input()
 
     def colornum(self, row, col):
         """Translate a cost into a number between 0 and 9."""
         if self.explored[(row, col)]:
             cost = self.explored[(row, col)]
-        else: cost = row * col // 2 + 1
-        if cost > self.max_cost:
-            print("cost overflow:", cost, "/", self.max_cost)
+        else:
+            cost = row * col // 2 + 1
+        # if cost > self.max_cost:
+        #    print("cost overflow:", cost, "/", self.max_cost)
         return EXPLORED + min(10 * cost // self.max_cost, 9)
 
     def update(self):

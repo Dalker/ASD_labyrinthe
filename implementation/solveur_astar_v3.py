@@ -27,12 +27,21 @@ def manhattan_distance(node1, node2):
 
 
 class QueuePrioritaire():
-    """Queue prioritaire pour gérer la marge de A*."""
+    """
+    Queue prioritaire pour gérer la marge de A*.
+
+    Attribut:
+    - queue: heapq
+    """
 
     def __init__(self, start):
         """Initialiser la queue à partir du noeud de départ."""
         self.queue = [(0, start)]
         heapq.heapify(self.queue)
+
+    def __str__(self):
+        """Retourner la file d'attente sous forme ascii."""
+        return str(self.queue)
 
     def insert(self, priority, node):
         """Insérer un noeud dans la queue."""
