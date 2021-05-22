@@ -41,8 +41,19 @@ class DualViewer():
     def __init__(self, grid):
         """Mettre en place le visualiseur."""
         self.grid = grid
-        self.fig, (self.ax1, self.axd, self.ax2) = plt.subplots(1, 3)
-        for ax in (self.ax1, self.axd, self.ax2):
+        # self.fig, (self.ax1, self.axd, self.ax2) = plt.subplots(1, 3)
+        self.fig = plt.figure()
+        side = 0.35
+        shifty = .35
+        self.ax1 = self.fig.add_axes((.05, shifty, side, side))
+        self.axd = self.fig.add_axes((.35, shifty, side, side))
+        self.ax2 = self.fig.add_axes((.65, shifty, side, side))
+        self.axt1 = self.fig.add_axes((.05, shifty-.05, side, .05))
+        self.axt2 = self.fig.add_axes((.65, shifty-.05, side, .05))
+        self.txt1 = self.axt1.text(.4, 0, "$N=0$")
+        self.txt2 = self.axt2.text(.4, 0, "$N=0$")
+        for ax in (self.ax1, self.axd, self.ax2, self.axt1, self.axt2):
+            # pass
             ax.set_axis_off()
         lignes = str(grid).split("\n")
         n_rows = len(lignes)
@@ -69,6 +80,9 @@ class DualViewer():
         """Avancer d'un pas l'animation."""
         self.solver0.pas()
         self.solver1.pas()
+        if self.solver0.etat == "backtrack":
+            for _ in range(5):
+                self.solver0.pas()
         for x, y in self.solver0.cout_reel:
             self._matrix0[x][y] = NULL
             if (x, y) in self.solver1.cout_reel:
@@ -88,7 +102,12 @@ class DualViewer():
         self.img1.set_data(self._matrix0)
         self.img2.set_data(self._matrix1)
         self.imgd.set_data(self._matrixd)
-        return self.img1, self.img2, self.imgd
+        count1 = len(self.solver0.cout_reel)
+        count2 = len(self.solver1.cout_reel)
+        self.txt1.set_text(f"$N={count1}$")
+        self.txt2.set_text(f"$N={count2}$")
+        # self.fig.draw_artist(self.txt1)
+        return self.img1, self.img2, self.imgd, self.txt1, self.txt2
 
     def init_anim(self):
         """Initialisation de l'animation."""
@@ -98,7 +117,8 @@ class DualViewer():
         self.img2 = self.ax2.matshow(self._matrix1)
         self.axd.set_title("différence")
         self.imgd = self.axd.matshow(self._matrixd)
-        return self.img1, self.img2, self.imgd
+        # self.fig.draw_artist(self.txt1)
+        return self.img1, self.img2, self.imgd, self.txt1, self.txt2
 
 
 if __name__ == "__main__":
