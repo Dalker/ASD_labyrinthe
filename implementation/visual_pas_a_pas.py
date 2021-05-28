@@ -33,6 +33,7 @@ class DualViewer():
     Visualiseur pour deux résolutions du même labyrinthe.
 
     Attributs:
+    - solving: booléen, vrai après clic sur fenêtre pour démarrer
     - grid: le labyrinthe à résoudre
     - self.fig, self.ax1, self.ax2, self.axdiff: objets matplotlib persistants
     - img1, img2, imgdiff: images matplotlib
@@ -43,6 +44,8 @@ class DualViewer():
         self.grid = grid
         # self.fig, (self.ax1, self.axd, self.ax2) = plt.subplots(1, 3)
         self.fig = plt.figure()
+        self.solving = False
+        self.fig.canvas.mpl_connect("button_press_event", self.click)
         side = 0.35
         shifty = .35
         self.ax1 = self.fig.add_axes((.05, shifty, side, side))
@@ -77,8 +80,15 @@ class DualViewer():
                                    init_func=self.init_anim,
                                    blit=True, interval=INTERVAL)
 
+    def click(self, event):
+        """Recevoir un clic de souris."""
+        self.solving = not self.solving
+
     def step_anim(self, frame):
         """Avancer d'un pas l'animation."""
+        if not self.solving:
+            # bizarement ces textes disparaissent sinon
+            return self.txt1, self.txt2  
         self.solver0.pas()
         self.solver1.pas()
         if self.solver0.etat == "backtrack":
