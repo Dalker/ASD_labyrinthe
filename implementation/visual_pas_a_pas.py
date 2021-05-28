@@ -67,8 +67,9 @@ class DualViewer():
         self._matrix0 = copy.deepcopy(self._matrix1)
         self._matrixd = [[UNKNOWN for col in range(n_cols)]
                          for row in range(n_rows)]
-        for mat in (self._matrix0, self._matrix1, self._matrixd):
-            mat[self.grid.start[0]][self.grid.start[1]] = CHEMIN
+        self._matrixd[self.grid.start[0]][self.grid.start[1]] = CHEMIN
+        for mat in (self._matrix0, self._matrix1):
+            mat[self.grid.out[0]][self.grid.out[1]] = CHEMIN
 
     def animate(self):
         """Animer les solveurs."""
@@ -83,6 +84,9 @@ class DualViewer():
         if self.solver0.etat == "backtrack":
             for _ in range(5):
                 self.solver0.pas()
+        if self.solver1.etat == "backtrack":
+            for _ in range(5):
+                self.solver1.pas()
         for x, y in self.solver0.cout_reel:
             self._matrix0[x][y] = NULL
             if (x, y) in self.solver1.cout_reel:
