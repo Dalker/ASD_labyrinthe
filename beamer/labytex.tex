@@ -158,15 +158,15 @@
   \end{itemize}
 \end{frame}
 
-\subsection{Structure de données "Priority Queue"}
+\subsection{Structure de données ``Priority Queue''}
 \begin{frame}
-  \frametitle{File d'attente: "Priority Queue"}
+  \frametitle{File d'attente: ``Priority Queue''}
   \begin{itemize}
-  \item Structure permettant "push" avec priorité et "pop" rapide de
+  \item Structure permettant ``push'' avec priorité et ``pop'' rapide de
     l'élément prioritaire
   \item Implémentation en Python en tant que \textbf{binary heap} avec le module \textit{heapq}
-  \item Dans cette implémentation, vérifier si vide en $O(1)$, "push" et
-    "pop" en $O\left(\log(n)\right)$ où $n$ est le nombre d'objets en attente\footnote{cf. https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/BinomialHeaps.pdf}
+  \item Dans cette implémentation, vérifier si vide en $O(1)$, ``push'' et
+    ``pop'' en $O\left(\log(n)\right)$ où $n$ est le nombre d'objets en attente\footnote{cf. https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/BinomialHeaps.pdf}
   % \item Un élément est un tuple (heuristique, numéro, contenu), ainsi en cas
   %   d'heuristique égale, le numéro le plus bas (insertion plus ancienne) donne
   %   la priorité
@@ -183,7 +183,6 @@
 %   \end{itemize}
 % \end{frame}
 
-
 \subsection{Idée de preuve}
 \begin{frame}
   \frametitle{Preuve de l'algorithme (grandes lignes)}
@@ -195,17 +194,18 @@
     $r(C_1, C_2)$ est la distance réelle entre elles.
 % Une image serait pratique pour la tringulation etc.
     \par\smallskip
-    \onslide<2->{Cette propriété garantit de trouver la sortie, sans se "perdre" dans des
-      boucles éventuelles.}
+    \onslide<2->{Cette propriété garantit de trouver la sortie, sans se
+      ``perdre'' dans des boucles éventuelles.}
   \item<3-> \textbf{Admissibilité: l'heuristique ne surestime jamais une distance}
-% "admissibilité" ??? Plutôt "sous-estimation", ou qqch dans ce genre?
+    % "admissibilité" ??? Plutôt "sous-estimation", ou qqch dans ce genre?
+    % toutes les réfs parlent d'admissibilité...
     \par\smallskip
     \onslide<4->{Cela garantit qu'il n'y a pas de chemin plus court que celui
-      trouvé.}\par\smallskip
-    \onslide<5->{Par contradiction:}\onslide<6->{s'il y en avait un, il aurait
-      été estimé correctement ou sous-estimé, et serait donc prioritaire par
-      rapport à un chemin complet trop long, vu qu'\textbf{un chemin complet
-      a une priorité calculée en coût réel. (coût heuristique de cellule A $ \le $ 0 !)}}
+      trouvé.}\par\smallskip \onslide<5->{Par contradiction: }\onslide<6->{s'il
+      y en avait un, il aurait été estimé correctement ou sous-estimé, et serait
+      donc prioritaire par rapport à un chemin complet trop long, vu
+      qu'\textbf{un chemin complet a une priorité calculée en coût réel. (coût
+        heuristique de cellule A = 0)}}
   \end{enumerate}
 \end{frame}
 
@@ -227,13 +227,12 @@
   \quad
   \begin{minipage}{.55\textwidth}
     \only<1>{\textbf{Objectif}\par
-      Trouver le chemin le plus court entre le \textbf{D}épart
-      et l'\textbf{A}rrivée}
-    \only<2>{Chaque noeud est à une distance réelle du départ, qui sera
-      découverte en cours de route.}
-    \only<3>{Estimation de la distance réelle de l'arrivée pour chaque cellule (Heuristique "Manhattan").}
-    \only<4>{Le départ est mis en file d'attente, avec une priorité 0.}
-    \only<5>{Le seul voisin est évalué:
+      Trouver le chemin le plus court entre le \textbf{D}épart et
+      l'\textbf{A}rrivée} \only<2>{Chaque noeud est à une distance réelle du
+      départ, qui sera découverte en cours de route.}  \only<3>{Estimation de la
+      distance réelle de l'arrivée pour chaque cellule (Heuristique
+      ``Manhattan'').}  \only<4>{Le départ est mis en file d'attente, avec une
+      priorité 0.}  \only<5>{Le seul voisin est évalué:
       \begin{itemize}
       \item coût réel pour y accéder: \textcolor{green}1
       \item coût heuristique pour la suite: \textcolor{red}{17}
@@ -258,24 +257,22 @@
   \end{minipage}
 \end{frame}
 
-\subsection{Complexité - algorithme abstrait}
+\subsection{Complexité}
 \begin{frame}
   \frametitle{Complexité de l'algorithme - 1}
   Le pire des cas sera réalisé par un labyrinthe dont le meilleur chemin revient
   souvent en arrière (s'éloigne de l'arrivée). Dans ce cas, aucun gain n'est
-  réalisé par rapport à l'algorithme de Dijsktra (ou "heuristique nulle").
+  réalisé par rapport à l'algorithme de Dijsktra (ou ``heuristique nulle'').
   \par\medskip
-  \onslide<2->{
-  Cependant, le "worst case" ne rend pas justice à A* dont le but est
-  justement d'éviter la plupart du temps le "worst case" avec un bon choix
-  d'heuristique.
-  }
+  \onslide<2->{Cependant, le ``worst case'' ne rend pas justice à A* dont le
+    but est justement d'éviter la plupart du temps le ``worst case'' avec un bon
+    choix d'heuristique.}
 \end{frame}
 
 \begin{frame}
   \frametitle{Complexité de l'algorithme - 2}
   \onslide<1->\begin{itemize}
-  \item "worst case" $\rightarrow$ visite toutes les N cellules. 
+  \item ``worst case'' $\rightarrow$ visite toutes les N cellules. 
    \onslide<2->\begin{itemize} 
    \item \textbf {Pop} pour chaque cellule visitée, \textbf {push} de chaque voisin atteignable (si pas encore pushé). 
    \onslide<3->\item Sinon, \textbf {raffraichissement} éventuel de la liste d'attente 
@@ -294,7 +291,6 @@
   \onslide<8-> L'implémentation de la liste d'attente est cruciale.  La complexité de \textbf {push}, \textbf {pop} et \textbf {raffraichissement} dépendent en effet du type de file mise en oeuvre!
 \end{frame}
 
-\subsection{Complexité - avec deux types de structure de données}
 \begin{frame}
   \frametitle{Complexité - structure de données}
   \begin{block}{complexité algorithmique}
@@ -323,7 +319,7 @@
     while True:
         noeud\_courant = marge.pop()
         if noeud\_courant is None:
-            raise ValueError("A*: la grille fournie n'a pas de solution")
+            raise ValueError(``A*: la grille fournie n'a pas de solution'')
         if noeud\_courant == grid.out:
             break  \# on a trouvé un chemin optimal vers la sortie
         for direction in ((0, 1), (1, 0), (0, -1), (-1, 0)):
@@ -349,7 +345,7 @@ parent = {grid.start: None}
 while True:
     noeud_courant = marge.pop()
     if noeud_courant is None:
-        raise ValueError("la grille n'a pas de solution")
+        raise ValueError(``la grille n'a pas de solution'')
     if noeud_courant == grid.out:
         break  # chemin optimal trouvé
     # ... traiter noeud courant
@@ -402,8 +398,8 @@ la suite dans: % \url{https://github.com/Dalker/ASD_labyrinthe/}
   \begin{itemize}
   \item Liste des sources consultées:
     \url{https://github.com/Dalker/ASD_labyrinthe/wiki/Sources}
-  \item Notre implémentation en Python, avec tests temporels et "tests
-    visuels" (animations):
+  \item Notre implémentation en Python, avec tests temporels et ``tests
+    visuels'' (animations):
     
     \url{https://github.com/Dalker/ASD_labyrinthe/tree/main/implementation}
   \end{itemize}
