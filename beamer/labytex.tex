@@ -144,9 +144,11 @@
   La priorité d'une cellule $C$ en attente est le coût total (estimé) d'un chemin passant par cette cellule.
   \smallskip
   priorité = coût\_réel ($D \rightarrow C$) + coût\_estimé ($C\rightarrow A$)
-  \medskip
+
+
   \onslide<2->{La distance restante depuis une cellule jusqu'à l'arrivée doit être estimée
   \textit{sans jamais la surestimer}. $ \rightarrow $ choix d'heuristique!}
+  \medskip
   \begin{itemize}
   \item<3->{La \textbf{distance de Manhattan} $|\Delta x| + |\Delta y|$ est un bon estimateur 
   si les mouvements permis sont horizontaux et verticaux.}
@@ -181,6 +183,7 @@
 %   \end{itemize}
 % \end{frame}
 
+
 \subsection{Idée de preuve}
 \begin{frame}
   \frametitle{Preuve de l'algorithme (grandes lignes)}
@@ -190,17 +193,19 @@
   \item<2-> \textbf{Monotonicité}: sorte d'inégalité triangulaire faible
     $h(C_1) \leq r(C_1,C_2) + h(C_2)$ où $C_1, C_2$ sont deux cellules,
     $r(C_1, C_2)$ est la distance réelle entre elles.
+% Une image serait pratique pour la tringulation etc.
     \par\smallskip
     \onslide<2->{Cette propriété garantit de trouver la sortie, sans se "perdre" dans des
       boucles éventuelles.}
   \item<3-> \textbf{Admissibilité: l'heuristique ne surestime jamais une distance}
+% "admissibilité" ??? Plutôt "sous-estimation", ou qqch dans ce genre?
     \par\smallskip
     \onslide<4->{Cela garantit qu'il n'y a pas de chemin plus court que celui
       trouvé.}\par\smallskip
     \onslide<5->{Par contradiction:}\onslide<6->{s'il y en avait un, il aurait
       été estimé correctement ou sous-estimé, et serait donc prioritaire par
       rapport à un chemin complet trop long, vu qu'\textbf{un chemin complet
-      a une priorité calculée en coût réel. (heuristique de A = 0)}}
+      a une priorité calculée en coût réel. (coût heuristique de cellule A $ \le $ 0 !)}}
   \end{enumerate}
 \end{frame}
 
@@ -212,7 +217,7 @@
     \only<2>{\includegraphics[width=\linewidth]{../diapos/V2bis/page2.png}} % 2 ou 4
     \only<3>{\includegraphics[width=\linewidth]{../diapos/V2bis/page5.png}} % 5 ou 6
     \only<4>{\includegraphics[width=\linewidth]{../diapos/V2/page1.png}}
-    \setcounter{pngnumber}{2}
+    \setcounter{pngnumber}{3}
     \forloop{onlynumber}{5}{\value{onlynumber} < 66}{
       % \only<\arabic{onlynumber}>{only \theonlynumber, png \thepngnumber}\par
       \only<\arabic{onlynumber}>{\includegraphics[width=\linewidth]{../diapos/V2/page\arabic{pngnumber}.png}}
@@ -253,45 +258,60 @@
   \end{minipage}
 \end{frame}
 
-\subsection{Complexité 1}
+\subsection{Complexité - algorithme abstrait}
 \begin{frame}
-  \frametitle{Complexité}
+  \frametitle{Complexité de l'algorithme - 1}
   Le pire des cas sera réalisé par un labyrinthe dont le meilleur chemin revient
   souvent en arrière (s'éloigne de l'arrivée). Dans ce cas, aucun gain n'est
   réalisé par rapport à l'algorithme de Dijsktra (ou "heuristique nulle").
-  \par\medskip
-  \onslide<2->{
-Dans le "worst case", on visite toutes les N cellules. Pour chaque cellule visitée, on a fait un pop puis on push chaque voisin atteignable. Au total, le nombre de pop et éventuellement de raffraichissement du coût sera de $A$ où $A$ est le nombre d'arêtes conduisant à une cellule d'exploration, donc $A\sim O({N})$ vu que chaque noeud possède au maximum 4 arêtes (voisins).
-Au final, on aura maximum $N$ x ($pop$ + $push$) + $A$ x ($raffraichissement$)
-  L'implémentation de la liste d'attente est cruciale.  Les coûts de $push$, $pop$ et $raffraichissement$ dépendent en effet du type de file mise en oeuvre!
-}
-\end{frame}
-
-\subsection{Complexité 2}
-\begin{frame}
-  \frametitle{Complexité - structure de données}
-  \begin{itemize}
- \item tableau:
- Pour un simple tableau, les coûts sont les suivants:
- $push$ et $raffraichissement$ = $O(1)$, $pop$ est en $O(N)$ car il faut parcourir 
- tout le tbleau pour trouver la cellule prioritaire. 
- Donc, la complexité finale est $N$ x ($pop$ + $push$) + $A$ x $raffraichissement$ 
- = $N$ x ($O(N)$ + $O(1)$) + $A$ x $O(1)$, soit au final, $O(N^2)$. 
- \item arbre de tri binaire:
- Avec une file d'attente implémentée sous forme d'arbre de tri binaire, 
- les coûts sont les suivants:
- $push$ et $raffraichissement$ sont en $O(\log(N))$ et $pop$ en $O(1)$.
- Donc, la complexité finale est $N$ x ($pop$ + $push$) + $A$ x $raffraichissement$ 
- = $N$ x ($O(1)$ + $O(logN)$) + $A$ x $O(logN)$, soit $O((N+A)logN)$. 
- Comme $A$ est $O(N)$, au final, on a du $O(NlogN)$.
-  \end{itemize}
-
   \par\medskip
   \onslide<2->{
   Cependant, le "worst case" ne rend pas justice à A* dont le but est
   justement d'éviter la plupart du temps le "worst case" avec un bon choix
   d'heuristique.
   }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Complexité de l'algorithme - 2}
+  \onslide<1->\begin{itemize}
+  \item "worst case" $\rightarrow$ visite toutes les N cellules. 
+   \onslide<2->\begin{itemize} 
+   \item \textbf {Pop} pour chaque cellule visitée, \textbf {push} de chaque voisin atteignable (si pas encore pushé). 
+   \onslide<3->\item Sinon, \textbf {raffraichissement} éventuel de la liste d'attente 
+   \end{itemize}
+  \onslide<4->\item Le nombre de \textbf {pop} et de \textbf {push} sera donc au maximum N.
+  \onslide<5->\item Le nombre de \textbf {raffraichissements} sera au maximum de $A$ 
+
+  où $A$ = nombre de mouvements possibles.
+    \onslide<6->\begin{itemize} 
+    \item $O({A}) \sim O({N})$ vu que chaque cellule possède au maximum 4 voisins atteignables.
+    \end{itemize}
+   \end{itemize}
+  \onslide<7->\begin{block}{complexité algorithmique}
+  $N \cdot (pop + push) + A \cdot (raffraichissement)$
+  \end{block}
+  \onslide<8-> L'implémentation de la liste d'attente est cruciale.  La complexité de \textbf {push}, \textbf {pop} et \textbf {raffraichissement} dépendent en effet du type de file mise en oeuvre!
+\end{frame}
+
+\subsection{Complexité - avec deux types de structure de données}
+\begin{frame}
+  \frametitle{Complexité - structure de données}
+  \begin{block}{complexité algorithmique}
+  $N \cdot (pop + push) + A \cdot (raffraichissement)$
+  \end{block}
+  \onslide<2->\begin{itemize}
+  \item simple tableau:
+  \textbf {push} et \textbf {raffraichissement} en $O(1)$, \textbf {pop} en $O(N)$
+  \begin{block}{complexité totale avec simple tableau}
+  $N \cdot (O(N) + O(1)) + A \cdot O(1) = O(N^2)$. 
+  \end{block}
+  \onslide<3->\item queue prioritaire binaire:
+  \textbf {push} et \textbf {raffraichissement} en $O(\log(N))$ ,  \textbf {pop} en $O(1)$.
+  \begin{block}{complexité totale avec queue prioritaire binaire}
+  $N \cdot (O(1) + O(\log(N))) + A \cdot O(\log(N)) = O(N \cdot \log(N))$
+  \end{block}
+  \end{itemize}
 \end{frame}
 
 \section{Tests avec Python}
