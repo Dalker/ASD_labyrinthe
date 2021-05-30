@@ -384,11 +384,37 @@ la suite dans: % \url{https://github.com/Dalker/ASD_labyrinthe/}
 \end{frame}
 
 \section{Conclusion}
+\subsection{Ants}
 \begin{frame}
-  \frametitle{Conclusion}
-  \begin{itemize}
-  \item Fourmis
-  \item Robot-Aspirateur
+  \frametitle{Conclusion - Autres "Path Finding" Ants}
+  «ACO» : Ant Colony Optimisation
+   \onslide<2->\begin{itemize}
+   \item imite la nature avec dépôt de phéromones
+   \onslide<3->\item évaporation des phéromones $\rightarrow$ disparition des chemins longs
+   \onslide<4->\item Avantage: adaptable si le labyrinthe évolue au cours du temps!
+   \onslide<5->\item Désavantage: necessite un grand nombre d'individus
+   \end{itemize}
+  \begin{minipage}{.6\textwidth}    
+   \includegraphics[width=\linewidth]{Aco_branches.svg.png}
+  \end{minipage}
+  \begin{minipage}{.35\textwidth}    
+   Par Johann Dréo (User:Nojhan) — Travail personnel, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=815564
+  \end{minipage}
+\end{frame}
+
+\subsection{Robots}
+\begin{frame}
+  \frametitle{Conclusion - Autres "Path Finding" Robots}
+  Robots aspirateurs
+  \onslide<2->\begin{itemize} \item But un peu différent car ils doivent passer partout 1 seule fois
+  \onslide<3->\item Mais ils doivent aussi trouver leur chemin d'un point A vers un point B
+  \onslide<4->\item Ils utilisent souvent des algorithmes évolutionnistes
+  \onslide<5->\item Gènes = paramètres à optimiser (chemins) 
+  \onslide<6->\item Transmission de gènes, via reproduction
+  \onslide<7->\item Quelques mutations puis verdict du calcul d'adaptabilité
+  \onslide<8->\item Les "individus" moins performants disparaissent
+  \onslide<9->\item Avantage: Adaptable si le labyrinthe se modifie
+  \onslide<10->\item Désavantage: Beaucoup d'individus et de générations pour parvenir à un bon résultat  
   \end{itemize}
 \end{frame}
 
