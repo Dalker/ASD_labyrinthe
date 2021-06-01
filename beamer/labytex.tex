@@ -77,13 +77,23 @@
   \item<1-> Cherche-t-on un chemin quelconque?
     \begin{itemize}
     \item<2-> Oui, on ne traversera le labyrinthe qu'une seule fois.
-    \item<2-> \textbf<3->{Non, on veut le chemin le plus court}, pour peut-être le réutiliser.
+    \item<2-> \textbf<3->{Non, on veut le chemin le plus court},
+      pour peut-être le réutiliser.
     \end{itemize}
   \item<4-> Connait-on les coordonnées de la sortie dès le départ?
     \begin{itemize}
     \item<5-> \textbf<6->{Oui, et cette information pourra nous aider.}
     \item<5-> Non, le lieu de la sortie fait partie des inconnues.
     \end{itemize}
+  \end{itemize}
+  \bigskip
+  \onslide<7->{Pour nous, un labyrinthe sera encapsulé dans un objet pouvant
+  être consulté afin d'obtenir:}
+  \begin{itemize}
+  \item<8-> les coordonnées de l'entrée
+  \item<9-> les coordonnées de la sortie
+  \item<10-> une méthode pour demander s'il est possible de traverser une
+    cellule à des coordonnées données
   \end{itemize}
 \end{frame} % choix du problème
 
@@ -128,11 +138,12 @@
     \onslide<2->{Tant que la file d'attente n'est pas vide,}
     \begin{itemize}
     \item<3-> extraire (pop) la cellule prioritaire $C$ de la file d'attente
-    \item<4-> si $C$ est la cellule d'arrivée $A$, retourner le chemin qui y amène (via backtracking sur les prédecesseurs)
+    \item<4-> si $C$ est la cellule d'arrivée $A$, retourner le chemin qui y amène (via backtracking sur les prédécesseurs)
     \item<5-> sinon, pour chaque voisin $V$ de $C$ qui n'est pas déjà accessible à moindre coût
       \begin{itemize}
-      \item<6-> mémoriser le prédecesseur de $V$ (donc $C$) et le coût d'accès à $V$
-      \item<7-> insérer (push) $V$ dans la file d'attente
+      \item<6-> mémoriser le prédécesseur de $V$ (soit la cellule $C$) et le
+        coût d'accès à $V$ (soit un de plus que le coût d'accès à $C$)
+      \item<8-> insérer (push) $V$ dans la file d'attente
       \end{itemize}
     \end{itemize}    
   \end{block}
@@ -178,7 +189,7 @@
 %   \item<1-> La priorité d'un noeud est le \textbf{coût heuristique} pour aller de
 %     l'entrée à la sortie en passant par ce noeud.
 %   \item<2-> Un élément de la queue a comme attributs l'identité du noeud, le
-%     \textbf{coût réel} pour y accéder et son prédecesseur
+%     \textbf{coût réel} pour y accéder et son prédécesseur
 %   \item<3-> La queue est initialisée avec le noeud de départ et un coût nul.
 %   \end{itemize}
 % \end{frame}
