@@ -10,7 +10,7 @@
 % options de beamer
 \usetheme{Boadilla}
 \title{Projet \textit{Labyrinthe}}
-\subtitle{Algorithmes et Structures de Donnée}
+\subtitle{Algorithmes et Structures de Données}
 \author{Juan-Carlos Barros et Daniel Kessler}
 % des compteurs pour l'importation d'images
 \usepackage{forloop}
@@ -50,17 +50,15 @@
 %  \frametitle{}
   % Formation \textit{GymInf},
   Cours d'\textit{\textcolor<1>{blue}{Algorithmes}}
-  et \textit{\textcolor<1>{green}{Structures de donnée}}
+  et \textit{\textcolor<1>{green}{Structures de données}}
   \par\bigskip
   \onslide<2->{Projet \textit{Labyrinthe}}\par
-  \begin{minipage}{.5\linewidth}
+  \begin{minipage}{.65\linewidth}
   \begin{itemize}
   \item<2->\textcolor{blue}{Algorithme}\par\onslide<3->{A*}
-  \item<2->\textcolor{green}{Structure de Donnée}
-  \par\onslide<4>begin{itemize}
-   \item {Objet "Labyrinthe"}
-   \onslide<5>\item {Priority Queue}
-  \end{itemize}
+  \item<2->\textcolor{green}{Structures de Données}\par\onslide<4->{Objet "labyrinthe"}
+  \par\onslide<5->{Priority Queue}
+%  \par\onslide<6->{Tableau des parents}
   \end{itemize}
   \end{minipage}
   \begin{minipage}{.3\linewidth}
@@ -90,6 +88,7 @@
     \item<5-> Non, le lieu de la sortie fait partie des inconnues.
     \end{itemize}
   \end{itemize}
+% début du doublon avec partie rajoutée spécifiquement sur les structures de données employées dans notre projet
   \bigskip
   \onslide<7->{Pour nous, un labyrinthe sera encapsulé dans un objet pouvant
   être consulté afin d'obtenir:}
@@ -99,6 +98,7 @@
   \item<10-> une méthode pour demander s'il est possible de traverser une
     cellule à des coordonnées données
   \end{itemize}
+% fin du doublon
 \end{frame} % choix du problème
 
 \subsection{Choix de l'Algorithme}
@@ -173,31 +173,6 @@
   \end{itemize}
 \end{frame}
 
-\subsection{Structure de données ``Priority Queue''}
-\begin{frame}
-  \frametitle{File d'attente: ``Priority Queue''}
-  \begin{itemize}
-  \item Structure permettant ``push'' avec priorité et ``pop'' rapide de
-    l'élément prioritaire
-  \item Implémentation en Python en tant que \textbf{binary heap} avec le module \textit{heapq}
-  \item Dans cette implémentation, vérifier si vide en $O(1)$, ``push'' et
-    ``pop'' en $O\left(\log(n)\right)$ où $n$ est le nombre d'objets en attente\footnote{cf. https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/BinomialHeaps.pdf}
-  % \item Un élément est un tuple (heuristique, numéro, contenu), ainsi en cas
-  %   d'heuristique égale, le numéro le plus bas (insertion plus ancienne) donne
-  %   la priorité
-  \end{itemize}
-\end{frame}
-% \begin{frame}
-%   \frametitle{Priority Queue pour A*}
-%   \begin{itemize}
-%   \item<1-> La priorité d'un noeud est le \textbf{coût heuristique} pour aller de
-%     l'entrée à la sortie en passant par ce noeud.
-%   \item<2-> Un élément de la queue a comme attributs l'identité du noeud, le
-%     \textbf{coût réel} pour y accéder et son prédécesseur
-%   \item<3-> La queue est initialisée avec le noeud de départ et un coût nul.
-%   \end{itemize}
-% \end{frame}
-
 \subsection{Idée de preuve}
 \begin{frame}
   \frametitle{Preuve de l'algorithme (grandes lignes)}
@@ -207,13 +182,14 @@
   \item<2-> \textbf{Monotonicité}: sorte d'inégalité triangulaire faible
     $h(C_1) \leq r(C_1,C_2) + h(C_2)$ où $C_1, C_2$ sont deux cellules,
     $r(C_1, C_2)$ est la distance réelle entre elles.
-% Une image serait pratique pour la tringulation etc.
+% Une image serait pratique pour la triangulation etc.
     \par\smallskip
     \onslide<2->{Cette propriété garantit de trouver la sortie, sans se
       ``perdre'' dans des boucles éventuelles.}
   \item<3-> \textbf{Admissibilité: l'heuristique ne surestime jamais une distance}
     % "admissibilité" ??? Plutôt "sous-estimation", ou qqch dans ce genre?
     % toutes les réfs parlent d'admissibilité...
+   % mais ça fait doublon avec "doit satisfaire deux conditions", donc les deux sont des "admissibilités", non?
     \par\smallskip
     \onslide<4->{Cela garantit qu'il n'y a pas de chemin plus court que celui
       trouvé.}\par\smallskip \onslide<5->{Par contradiction: }\onslide<6->{s'il
@@ -272,11 +248,11 @@
   \end{minipage}
 \end{frame}
 
-\subsection{Complexité}
+\subsection{Complexité abstraite (sans structure de données)}
 \begin{frame}
-  \frametitle{Complexité de l'algorithme - 1}
-  Le pire des cas sera réalisé par un labyrinthe dont le meilleur chemin revient
-  souvent en arrière (s'éloigne de l'arrivée). Dans ce cas, aucun gain n'est
+  \frametitle{Complexité abstraite de l'algorithme - 1}
+  Le pire des cas sera réalisé pour un labyrinthe dont le meilleur chemin revient
+  souvent en arrière (s'éloigne de l'arrivée). Dans le cas extrême, aucun gain n'est
   réalisé par rapport à l'algorithme de Dijsktra (ou ``heuristique nulle'').
   \par\medskip
   \onslide<2->{Cependant, le ``worst case'' ne rend pas justice à A* dont le
@@ -285,7 +261,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Complexité de l'algorithme - 2}
+  \frametitle{Complexité abstraite de l'algorithme - 2}
   \onslide<1->\begin{itemize}
   \item ``worst case'' $\rightarrow$ visite toutes les N cellules. 
    \onslide<2->\begin{itemize} 
@@ -294,7 +270,6 @@
    \end{itemize}
   \onslide<4->\item Le nombre de \textbf {pop} et de \textbf {push} sera donc au maximum N.
   \onslide<5->\item Le nombre de \textbf {raffraichissements} sera au maximum de $A$ 
-
   où $A$ = nombre de mouvements possibles.
     \onslide<6->\begin{itemize} 
     \item $O({A}) \sim O({N})$ vu que chaque cellule possède au maximum 4 voisins atteignables.
@@ -306,6 +281,62 @@
   \onslide<8-> L'implémentation de la liste d'attente est cruciale.  La complexité de \textbf {push}, \textbf {pop} et \textbf {raffraichissement} dépendent en effet du type de file mise en oeuvre!
 \end{frame}
 
+\section{Structures de données}
+\subsection{Représentation des Labyrinthes}
+ \begin{frame}
+ \frametitle{Structure de nos labyrinthes}
+  \begin{minipage}{.3\linewidth}
+  \textit{OBJET} "Labyrinthe"
+  \includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}
+
+ \end{minipage}
+ \begin{minipage}{.65\linewidth}
+   \begin{itemize}
+   \onslide<2->\item basé sur une matrice de booléens n x m (lignes x colonnes)
+   \onslide<3->\begin{itemize}\item chaque cellule de la matrice correspond à une case du labyrinthe
+   \onslide<4->\item True = permis (case blanche), 
+   \onslide<5->\item False = obstacle (case noire)
+   \end{itemize}
+   \onslide<6->\item Solveur peut questionner l'objet :
+   \onslide<7->\begin{itemize}\item Case (x,y) atteignable ?
+   \onslide<8->\item Coordonnées du départ $D$
+   \onslide<9->\item Coordonnées de l'arrivée $A$
+   \end{itemize}
+  \end{itemize}
+
+ \end{minipage}
+\end{frame}
+
+
+% Ce serait bien de parler de la structure de donnée employée pour les parents (dictionnaire?) 
+% \subsection{Tableau des parents}
+
+\subsection{``Priority Queue''}
+\begin{frame}
+  \frametitle{File d'attente: ``Priority Queue''}
+  \begin{itemize}
+  \item Structure permettant ``push'' avec priorité et ``pop'' rapide de
+    l'élément prioritaire
+  \item Implémentation en Python en tant que \textbf{binary heap} avec le module \textit{heapq}
+  \item Dans cette implémentation, vérifier si vide en $O(1)$, ``push'' et
+    ``pop'' en $O\left(\log(n)\right)$ où $n$ est le nombre d'objets en attente\footnote{cf. https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/BinomialHeaps.pdf}
+  % \item Un élément est un tuple (heuristique, numéro, contenu), ainsi en cas
+  %   d'heuristique égale, le numéro le plus bas (insertion plus ancienne) donne
+  %   la priorité
+  \end{itemize}
+\end{frame}
+% \begin{frame}
+%   \frametitle{Priority Queue pour A*}
+%   \begin{itemize}
+%   \item<1-> La priorité d'un noeud est le \textbf{coût heuristique} pour aller de
+%     l'entrée à la sortie en passant par ce noeud.
+%   \item<2-> Un élément de la queue a comme attributs l'identité du noeud, le
+%     \textbf{coût réel} pour y accéder et son prédécesseur
+%   \item<3-> La queue est initialisée avec le noeud de départ et un coût nul.
+%   \end{itemize}
+% \end{frame}
+
+\subsection{Complexité en fonction de la structure de donnée utilisée}
 \begin{frame}
   \frametitle{Complexité - structure de données}
   \begin{block}{complexité algorithmique}
