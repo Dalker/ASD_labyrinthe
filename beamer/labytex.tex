@@ -44,7 +44,7 @@
 
 \begin{frame}
   \titlepage
-\end{frame}
+\end{frame} % Titre officiel
 
 \begin{frame}
 %  \frametitle{}
@@ -56,7 +56,7 @@
   \begin{minipage}{.65\linewidth}
   \begin{itemize}
   \item<2->\textcolor{blue}{Algorithme}\par\onslide<3->{A*}
-  \item<2->\textcolor{green}{Structures de Données}\par\onslide<4->{Objet "labyrinthe"}
+  \item<2->\textcolor{green}{Structures de Données}%\par\onslide<4->{Objet "labyrinthe"}
   \par\onslide<5->{Priority Queue}
 %  \par\onslide<6->{Tableau des parents}
   \end{itemize}
@@ -64,44 +64,45 @@
   \begin{minipage}{.3\linewidth}
   \onslide<2->{\includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}}    
   \end{minipage}
-\end{frame} % Titre
+\end{frame} % Titre détaillé
 
 \begin{frame}
   \frametitle{Table des matières}
-  \tableofcontents
+  \tableofcontents[0]
 \end{frame} % toc
 
 \section{Quel algorithme pour résoudre quel problème?}
-\subsection{Choix du problème}
+%\subsection{Choix du problème}
 \begin{frame} 
   \frametitle{Un labyrinthe, plusieurs problèmes}
   \begin{itemize}
   \item<1-> Cherche-t-on un chemin quelconque?
     \begin{itemize}
-    \item<2-> Oui, on ne traversera le labyrinthe qu'une seule fois.
-    \item<2-> \textbf<3->{Non, on veut le chemin le plus court},
+    \item Oui, on ne traversera le labyrinthe qu'une seule fois.
+    \item \textbf<2->{Non, on veut le chemin le plus court},
       pour peut-être le réutiliser.
     \end{itemize}
-  \item<4-> Connait-on les coordonnées de la sortie dès le départ?
+  \item<3-> Connait-on les coordonnées de la sortie dès le départ?
     \begin{itemize}
-    \item<5-> \textbf<6->{Oui, et cette information pourra nous aider.}
-    \item<5-> Non, le lieu de la sortie fait partie des inconnues.
+    \item \textbf<4->{Oui, et cette information pourra nous aider.}
+    \item Non, le lieu de la sortie fait partie des inconnues.
     \end{itemize}
   \end{itemize}
-% début du doublon avec partie rajoutée spécifiquement sur les structures de données employées dans notre projet
-  \bigskip
-  \onslide<7->{Pour nous, un labyrinthe sera encapsulé dans un objet pouvant
-  être consulté afin d'obtenir:}
-  \begin{itemize}
-  \item<8-> les coordonnées de l'entrée
-  \item<9-> les coordonnées de la sortie
-  \item<10-> une méthode pour demander s'il est possible de traverser une
-    cellule à des coordonnées données
-  \end{itemize}
-% fin du doublon
+  % début du doublon avec partie rajoutée spécifiquement sur les structures de
+  % données employées dans notre projet
+  % \bigskip
+  % \onslide<7->{Pour nous, un labyrinthe sera encapsulé dans un objet pouvant
+  % être consulté afin d'obtenir:}
+  % \begin{itemize}
+  % \item<8-> les coordonnées de l'entrée
+  % \item<9-> les coordonnées de la sortie
+  % \item<10-> une méthode pour demander s'il est possible de traverser une
+  %   cellule à des coordonnées données
+  % \end{itemize}
+  % fin du doublon
 \end{frame} % choix du problème
 
-\subsection{Choix de l'Algorithme}
+%\subsection{Choix de l'Algorithme}
 \begin{frame}
   \frametitle{Un problème, plusieurs solutions}
   \begin{tabular}{p{.65\textwidth}p{.35\textwidth}}
@@ -129,17 +130,42 @@
   \end{tabular}
 \end{frame}
 
+%\subsection{Représentation d'un labyrinthe}
+\begin{frame}
+ \frametitle{Structure de donnée ``labyrinthe''}
+ \begin{minipage}{.3\linewidth}
+   % \textit{Objet} ``Labyrinthe''
+   \includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}
+ \end{minipage}
+ \begin{minipage}{.65\linewidth}
+   % \onslide<2->\item basé sur une matrice de booléens n x m (lignes x colonnes)
+   % \onslide<3->\begin{itemize}\item chaque cellule de la matrice correspond à une case du labyrinthe
+   % \onslide<4->\item True = permis (case blanche), 
+   % \onslide<5->\item False = obstacle (case noire)
+   % \end{itemize}
+   \begin{itemize}
+   \item<2-> Solveur peut questionner l'objet :
+     \begin{itemize}
+     \item<3-> Coordonnées du départ $D$
+     \item<4-> Coordonnées de l'arrivée $A$
+     \item<5-> Case (x,y) atteignable ?
+     \end{itemize}
+   \item<6-> Encapsulation pour rendre solveur indépendant de la structure.
+   \item<6-> Possible implémentation: via tableau de booléens
+  \end{itemize}
+ \end{minipage}
+\end{frame}
+
 \section{Algorithme A*}
-\subsection{Pseudo-Code}
+%\subsection{Pseudo-Code}
 \begin{frame}
   \frametitle{Algorithme A*}
   \begin{block}{pseudo-code}
-    Démarrer une file d'attente avec la cellule de départ $D$, une liste de
-    prédécesseurs avec $\{D:Nil\}$ et une liste de coûts d'accès avec
-    $\{D:0\}$.
-    \medskip
+    \onslide<2->{Démarrer une \textbf{file d'attente} avec la cellule de départ
+      $D$, un \textbf{tableau de prédécesseurs} avec $\{D:Nil\}$ et un
+      \textbf{tableau de coûts d'accès} avec $\{D:0\}$.}\medskip
     
-    \onslide<2->{Tant que la file d'attente n'est pas vide,}
+    \onslide<3->{Tant que la file d'attente n'est pas vide,}
     \begin{itemize}
     \item<3-> extraire (pop) la cellule prioritaire $C$ de la file d'attente
     \item<4-> si $C$ est la cellule d'arrivée $A$, retourner le chemin qui y amène (via backtracking sur les prédécesseurs)
@@ -147,20 +173,20 @@
       \begin{itemize}
       \item<6-> mémoriser le prédécesseur de $V$ (soit la cellule $C$) et le
         coût d'accès à $V$ (soit un de plus que le coût d'accès à $C$)
-      \item<8-> insérer (push) $V$ dans la file d'attente
+      \item<6-> insérer (push) $V$ dans la file d'attente
       \end{itemize}
     \end{itemize}    
   \end{block}
 \end{frame}
 
-\subsection{Heuristique et Priorité}
+%\subsection{Heuristique et Priorité}
 \begin{frame}
   \frametitle{Heuristique et Priorité}
-  La priorité d'une cellule $C$ en attente est le coût total (estimé) d'un chemin passant par cette cellule.
-  \smallskip
-  priorité = coût\_réel ($D \rightarrow C$) + coût\_estimé ($C\rightarrow A$)
-
-
+  La priorité d'une cellule $C$ en attente est le coût total (estimé) d'un
+  chemin passant par cette cellule.
+  \begin{center}\texttt{
+    priorité = coût\_réel ($D \rightarrow C$) + coût\_estimé ($C\rightarrow A$)}
+  \end{center}
   \onslide<2->{La distance restante depuis une cellule jusqu'à l'arrivée doit être estimée
   \textit{sans jamais la surestimer}. $ \rightarrow $ choix d'heuristique!}
   \medskip
@@ -169,11 +195,11 @@
   si les mouvements permis sont horizontaux et verticaux.}
   \par
   \item<4->{Une \textbf{heuristique nulle} ramène A* à l'algorithme de Dijkstra 
-  (ou Breadth-First Search si on a un coût identique pour chaque mouvement).}
+  (ou à Breadth-First Search si on coût identique pour chaque mouvement).}
   \end{itemize}
 \end{frame}
 
-\subsection{Idée de preuve}
+%\subsection{Idée de preuve}
 \begin{frame}
   \frametitle{Preuve de l'algorithme (grandes lignes)}
   L'heuristique $h(C)$ qui estime le chemin restant depuis une cellule $C$
@@ -186,13 +212,17 @@
     \par\smallskip
     \onslide<2->{Cette propriété garantit de trouver la sortie, sans se
       ``perdre'' dans des boucles éventuelles.}
-  \item<3-> \textbf{Admissibilité: l'heuristique ne surestime jamais une distance}
+  \item<3-> \textbf{``Admissibilité'': l'heuristique ne surestime jamais une distance}
     % "admissibilité" ??? Plutôt "sous-estimation", ou qqch dans ce genre?
     % toutes les réfs parlent d'admissibilité...
-   % mais ça fait doublon avec "doit satisfaire deux conditions", donc les deux sont des "admissibilités", non?
+    % mais ça fait doublon avec "doit satisfaire deux conditions", donc les deux
+    % sont des "admissibilités", non?
+    % bon, je rajoute des guillemets parce qu'on est vraiment en train de citer
+    % les preuves formelles avec leur vocabulaire
     \par\smallskip
-    \onslide<4->{Cela garantit qu'il n'y a pas de chemin plus court que celui
-      trouvé.}\par\smallskip \onslide<5->{Par contradiction: }\onslide<6->{s'il
+    \onslide<3->{Cela garantit qu'il n'y a pas de chemin plus court que celui
+      trouvé.}\par\smallskip
+    \onslide<4->{Par contradiction: }\onslide<5->{s'il
       y en avait un, il aurait été estimé correctement ou sous-estimé, et serait
       donc prioritaire par rapport à un chemin complet trop long, vu
       qu'\textbf{un chemin complet a une priorité calculée en coût réel. (coût
@@ -200,7 +230,7 @@
   \end{enumerate}
 \end{frame}
 
-\subsection{Exemple de résolution}
+%\subsection{Exemple de résolution}
 \begin{frame}
   \frametitle{Exemple de résolution}
   \begin{minipage}{.4\textwidth}    
@@ -248,7 +278,7 @@
   \end{minipage}
 \end{frame}
 
-\subsection{Complexité abstraite (sans structure de données)}
+%\subsection{Complexité abstraite (sans structure de données)}
 \begin{frame}
   \frametitle{Complexité abstraite de l'algorithme - 1}
   Le pire des cas sera réalisé pour un labyrinthe dont le meilleur chemin revient
@@ -259,14 +289,13 @@
     but est justement d'éviter la plupart du temps le ``worst case'' avec un bon
     choix d'heuristique.}
 \end{frame}
-
 \begin{frame}
   \frametitle{Complexité abstraite de l'algorithme - 2}
   \onslide<1->\begin{itemize}
   \item ``worst case'' $\rightarrow$ visite toutes les N cellules. 
    \onslide<2->\begin{itemize} 
    \item \textbf {Pop} pour chaque cellule visitée, \textbf {push} de chaque voisin atteignable (si pas encore pushé). 
-   \onslide<3->\item Sinon, \textbf {raffraichissement} éventuel de la liste d'attente 
+   \onslide<3->\item Sinon, \textbf {raffraichissement} éventuel de la file d'attente 
    \end{itemize}
   \onslide<4->\item Le nombre de \textbf {pop} et de \textbf {push} sera donc au maximum N.
   \onslide<5->\item Le nombre de \textbf {raffraichissements} sera au maximum de $A$ 
@@ -281,37 +310,10 @@
   \onslide<8-> L'implémentation de la liste d'attente est cruciale.  La complexité de \textbf {push}, \textbf {pop} et \textbf {raffraichissement} dépendent en effet du type de file mise en oeuvre!
 \end{frame}
 
-\section{Structures de données}
-\subsection{Représentation des Labyrinthes}
- \begin{frame}
- \frametitle{Structure de nos labyrinthes}
-  \begin{minipage}{.3\linewidth}
-  \textit{OBJET} "Labyrinthe"
-  \includegraphics[width=\linewidth]{../diapos/V2bis/page1.png}
-
- \end{minipage}
- \begin{minipage}{.65\linewidth}
-   \begin{itemize}
-   \onslide<2->\item basé sur une matrice de booléens n x m (lignes x colonnes)
-   \onslide<3->\begin{itemize}\item chaque cellule de la matrice correspond à une case du labyrinthe
-   \onslide<4->\item True = permis (case blanche), 
-   \onslide<5->\item False = obstacle (case noire)
-   \end{itemize}
-   \onslide<6->\item Solveur peut questionner l'objet :
-   \onslide<7->\begin{itemize}\item Case (x,y) atteignable ?
-   \onslide<8->\item Coordonnées du départ $D$
-   \onslide<9->\item Coordonnées de l'arrivée $A$
-   \end{itemize}
-  \end{itemize}
-
- \end{minipage}
-\end{frame}
-
-
-% Ce serait bien de parler de la structure de donnée employée pour les parents (dictionnaire?) 
+\section{Structure de données ``Priority Queue''}
+% Ce serait bien de parler de la structure de donnée employée pour les parents (dictionnaire?)
 % \subsection{Tableau des parents}
-
-\subsection{``Priority Queue''}
+%\subsection{``Priority Queue''}
 \begin{frame}
   \frametitle{File d'attente: ``Priority Queue''}
   \begin{itemize}
@@ -336,7 +338,7 @@
 %   \end{itemize}
 % \end{frame}
 
-\subsection{Complexité en fonction de la structure de donnée utilisée}
+%\subsection{Complexité en fonction de la structure de donnée utilisée}
 \begin{frame}
   \frametitle{Complexité - structure de données}
   \begin{block}{complexité algorithmique}
@@ -430,9 +432,9 @@ la suite dans: % \url{https://github.com/Dalker/ASD_labyrinthe/}
 \end{frame}
 
 \section{Conclusion}
-\subsection{Ants}
+%\subsection{Ants}
 \begin{frame}
-  \frametitle{Conclusion - Autres "Path Finding" Ants}
+  \frametitle{Conclusion - Autres ``Path Finding'' Ants}
   «ACO» : Ant Colony Optimisation
    \onslide<2->\begin{itemize}
    \item imite la nature avec dépôt de phéromones
@@ -453,9 +455,9 @@ la suite dans: % \url{https://github.com/Dalker/ASD_labyrinthe/}
   Johann Dréo — https://commons.wikimedia.org/w/index.php?curid=815564
 \end{frame}
 
-\subsection{Robots}
+%\subsection{Robots}
 \begin{frame}
-  \frametitle{Conclusion - Autres "Path Finding" Robots}
+  \frametitle{Conclusion - Autres ``Path Finding'' Robots}
   Robots aspirateurs
   \onslide<2->\begin{itemize} \item But un peu différent car doivent passer partout 1 seule fois
   \onslide<3->\item mais doivent aussi trouver un chemin d'un point A vers un point B
