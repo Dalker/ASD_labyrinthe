@@ -292,22 +292,22 @@
 \begin{frame}
   \frametitle{Complexité abstraite de l'algorithme - 2}
   \onslide<1->\begin{itemize}
-  \item ``worst case'' $\rightarrow$ visite toutes les N cellules. 
+  \item ``worst case'' $\rightarrow$ explore (pop) toutes les N cellules. 
    \onslide<2->\begin{itemize} 
-   \item \textbf {Pop} pour chaque cellule visitée, \textbf {push} de chaque voisin atteignable (si pas encore pushé). 
-   \onslide<3->\item Sinon, \textbf {raffraichissement} éventuel de la file d'attente 
+   \item \textbf {Pop} pour chaque cellule, \textbf {push} de chaque voisin atteignable. 
    \end{itemize}
-  \onslide<4->\item Le nombre de \textbf {pop} et de \textbf {push} sera donc au maximum N.
-  \onslide<5->\item Le nombre de \textbf {raffraichissements} sera au maximum de $A$ 
+  \onslide<3->\item Le nombre de \textbf {pop} sera donc au maximum N.
+  \onslide<4->\item Le nombre de \textbf {push}  sera au maximum de $A$ 
   où $A$ = nombre de mouvements possibles.
-    \onslide<6->\begin{itemize} 
+    \onslide<5->\begin{itemize} 
     \item $O({A}) \sim O({N})$ vu que chaque cellule possède au maximum 4 voisins atteignables.
     \end{itemize}
    \end{itemize}
-  \onslide<7->\begin{block}{complexité algorithmique}
-  $N \cdot (pop + push) + A \cdot (raffraichissement)$
+  \onslide<6->\begin{block}{complexité algorithmique}
+  $N \cdot ( compl(pop) + compl(push) )$
   \end{block}
-  \onslide<8-> L'implémentation de la liste d'attente est cruciale.  La complexité de \textbf {push}, \textbf {pop} et \textbf {raffraichissement} dépendent en effet du type de file mise en oeuvre!
+  \onslide<7-> L'implémentation de la liste d'attente est cruciale.  La complexité de \textbf {push} et \textbf {pop} dépendent en effet du type de file mise en oeuvre!  
+  \onslide<8-> \par Attention: Nous avons négligé la complexité de gestion des listes "coûts réels" et "prédécesseurs". Selon l'implémentation (si lire ou écrire une valeur $ > O(\log(N))$ ), elle pourrait être non négligeable...
 \end{frame}
 
 \section{Structure de données ``Priority Queue''}
@@ -342,47 +342,23 @@
 \begin{frame}
   \frametitle{Complexité - structure de données}
   \begin{block}{complexité algorithmique}
-  $N \cdot (pop + push) + A \cdot (raffraichissement)$
+  $N \cdot ( compl(pop) + compl(push) )$
   \end{block}
   \onslide<2->\begin{itemize}
   \item simple tableau:
-  \textbf {push} et \textbf {raffraichissement} en $O(1)$, \textbf {pop} en $O(N)$
+  \textbf {push} en $O(1)$, \textbf {pop} en $O(N)$
   \begin{block}{complexité totale avec simple tableau}
-  $N \cdot (O(N) + O(1)) + A \cdot O(1) = O(N^2)$. 
+  $N \cdot ( O(N) + O(1) ) = O(N^2)$. 
   \end{block}
   \onslide<3->\item queue prioritaire binaire:
-  \textbf {push} et \textbf {raffraichissement} en $O(\log(N))$ ,  \textbf {pop} en $O(1)$.
+  \textbf {push} en $O(\log(N))$ ,  \textbf {pop} en $O(1)$.
   \begin{block}{complexité totale avec queue prioritaire binaire}
-  $N \cdot (O(1) + O(\log(N))) + A \cdot O(\log(N)) = O(N \cdot \log(N))$
+  $N \cdot ( O(1) + O(\log(N)) ) = O(N \cdot \log(N))$
   \end{block}
   \end{itemize}
 \end{frame}
 
 \section{Tests avec Python}
-\defverbatim[colored]\code{
-   marge = QueuePrioritaire(grid.start)\\
-   cout\_reel = \{grid.start: 0\}\\
-   parent = \{grid.start: None\}\\
-\par\par
-    while True:
-        noeud\_courant = marge.pop()
-        if noeud\_courant is None:
-            raise ValueError(``A*: la grille fournie n'a pas de solution'')
-        if noeud\_courant == grid.out:
-            break  \# on a trouvé un chemin optimal vers la sortie
-        for direction in ((0, 1), (1, 0), (0, -1), (-1, 0)):
-            \# calculer coordonnées d'un voisin potentiel
-            voisin = tuple([noeud\_courant[i] + direction[i] for i in (0, 1)])
-            if voisin not in grid:
-                continue  \# on ne peut pas accéder à ces coordonnées
-            cout\_voisin = cout\_reel[noeud\_courant] + 1
-            if voisin in cout\_reel and cout\_voisin >= cout\_reel[voisin]:
-                continue  \# on a un meilleur chemin pour arriver à ce voisin
-            \# on est arrivé jusqu'ici: ajouter le voisin à la marge
-            cout\_reel[voisin] = cout\_voisin
-            parent[voisin] = noeud\_courant
-            marge.insert(cout\_voisin + distance(voisin, grid.out), voisin)
-}
 \begin{frame}[fragile]
   \frametitle{Tests avec Python}
   \begin{lstlisting}
@@ -393,7 +369,7 @@ parent = {grid.start: None}
 while True:
     noeud_courant = marge.pop()
     if noeud_courant is None:
-        raise ValueError(``la grille n'a pas de solution'')
+        raise ValueError("la grille n'a pas de solution")
     if noeud_courant == grid.out:
         break  # chemin optimal trouvé
     # ... traiter noeud courant
