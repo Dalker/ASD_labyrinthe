@@ -320,8 +320,8 @@
   \item Structure permettant ``push'' avec priorité et ``pop'' rapide de
     l'élément prioritaire
   \item Implémentation en Python en tant que \textbf{binary heap} avec le module \textit{heapq}
-  \item Dans cette implémentation, vérifier si vide en $O(1)$, ``push'' et
-    ``pop'' en $O\left(\log(n)\right)$ où $n$ est le nombre d'objets en attente\footnote{cf. https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/BinomialHeaps.pdf}
+  \item Dans cette implémentation, ``pop'' se fait en $O(1)$ et ``push'' 
+    en $O\left(\log(n)\right)$ où $n$ est le nombre d'objets en attente\footnote{cf. https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/BinomialHeaps.pdf}
   % \item Un élément est un tuple (heuristique, numéro, contenu), ainsi en cas
   %   d'heuristique égale, le numéro le plus bas (insertion plus ancienne) donne
   %   la priorité
@@ -342,18 +342,18 @@
 \begin{frame}
   \frametitle{Complexité - structure de données}
   \begin{block}{complexité algorithmique}
-  $N \cdot ( compl(pop) + compl(push) )$
+  $N \cdot \left( compl(pop) + compl(push)\right)$
   \end{block}
   \onslide<2->\begin{itemize}
   \item simple tableau:
   \textbf {push} en $O(1)$, \textbf {pop} en $O(N)$
   \begin{block}{complexité totale avec simple tableau}
-  $N \cdot ( O(N) + O(1) ) = O(N^2)$. 
+  $N \cdot \left( O(N) + O(1) \right) = O(N^2)$. 
   \end{block}
   \onslide<3->\item queue prioritaire binaire:
-  \textbf {push} en $O(\log(N))$ ,  \textbf {pop} en $O(1)$.
+  \textbf {push} en $O(\log(N))$ ,  \textbf {pop} en $O(\log(N))$.
   \begin{block}{complexité totale avec queue prioritaire binaire}
-  $N \cdot ( O(1) + O(\log(N)) ) = O(N \cdot \log(N))$
+  $N \cdot \left( O(\log(N)) + O(\log(N)) \right) = O\left(N \cdot \log(N)\right)$
   \end{block}
   \end{itemize}
 \end{frame}
